@@ -22,18 +22,21 @@
 ## ⚙️ Tech Stack
 
 **Frontend**
+
 - React + Vite
 - TypeScript
 - Tailwind CSS
 - TanStack Query
 
 **Backend**
+
 - Express.js
 - Prisma ORM
 - PostgreSQL
 - Zod Validation
 
 **Tooling**
+
 - Turborepo
 - ESLint + Prettier
 - GitHub Actions (CI/CD)
@@ -54,12 +57,15 @@ sarradabet/
 ```
 
 ## 🛠️ Development Setup
+
 ### Prerequisites
-* Node.js 18+
-* PostgreSQL 15+
-* NPM 8+
+
+- Node.js 18+
+- PostgreSQL 15+
+- NPM 8+
 
 #### Installation
+
 ```bash
 # Clone repository
 git clone https://github.com/yourusername/sarradabet.git
@@ -74,6 +80,7 @@ cp apps/api/.env.example apps/api/.env
 ```
 
 #### Database Setup
+
 ```bash
 
 # Run migrations
@@ -84,6 +91,7 @@ npm run prisma:generate
 ```
 
 #### Running Locally
+
 ```bash
 # Start all services
 npm run dev
@@ -96,6 +104,7 @@ npm run dev --filter=api
 ```
 
 ## 🤝 Contributing
+
 1. Fork the repository
 2. Create feature branch (git checkout -b feature/amazing-feature)
 3. Commit changes (git commit -m 'Add amazing feature')
@@ -103,4 +112,5 @@ npm run dev --filter=api
 5. Open Pull Request
 
 ## 📄 License
+
 Distributed under the MIT License. See LICENSE for more information.
