@@ -1,0 +1,94 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  extensions = [pg_trgm]
+}
+
+model Bet {
+  id          Int   @id @default(autoincrement())
+  title       String    @db.VarChar(255)
+  description String?
+  status      BetStatus @default(open)
+  result      BetResult @default(pending)
+  odds        Odds[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  resolvedAt  DateTime? @map("resolved_at")
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("bets")
+}
+
+model Odds {
+  id        Int  @id @default(autoincrement())
+  value     Float
+  result    BetResult @default(pending)
+  betId     Int
+  votes     Vote[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  bet       Bet      @relation(fields: [betId], references: [id])
+
+  @@index([betId])
+  @@index([value])
+  @@map("odds")
+}
+
+model Vote {
+  id        Int  @id @default(autoincrement())
+  oddId     Int
+  userId    Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  odd       Odds     @relation(fields: [oddId], references: [id])
+
+  @@unique([userId, oddId])
+  @@index([oddId])
+  @@map("votes")
+}
+
+model Admin {
+  id           Int   @id @default(autoincrement())
+  username     String    @unique
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  actions      AdminAction[]
+
+  @@map("admins")
+}
+
+model AdminAction {
+  id          Int  @id @default(autoincrement())
+  adminId     Int
+  actionType  String
+  targetId    Int
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  admin       Admin    @relation(fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([actionType])
+  @@map("admin_actions")
+}
+
+enum BetStatus {
+  open
+  closed
+  resolved
+}
+
+enum BetResult {
+  pending
+  won
+  lost
+}
