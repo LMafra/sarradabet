@@ -8,14 +8,26 @@ import { logger } from "./utils/logger";
 
 export const app = express();
 
-app.use(
-  cors({
-    origin: config.CORS_ORIGINS.split(",").map((origin) => origin.trim()),
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  }),
-);
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowedOrigins = config.CORS_ORIGINS.split(',').map(o => o.trim());
+
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+      return callback(null, true);
+    }
+
+    console.error(`🚨 CORS bloqueado para origem: ${origin}`);
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+app.options('*', cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
