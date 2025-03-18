@@ -6,7 +6,8 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  extensions = [pg_trgm]
+  directUrl = env("DATABASE_URL")
+  extensions = [pg_trgm, uuid_ossp]
 }
 
 model Bet {
