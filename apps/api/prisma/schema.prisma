@@ -44,12 +44,10 @@ model Odd {
 model Vote {
   id        Int  @id @default(autoincrement())
   oddId     Int
-  userId    Int
   createdAt DateTime @default(now()) @map("created_at")
 
   odd       Odd     @relation(fields: [oddId], references: [id])
 
-  @@unique([userId, oddId])
   @@index([oddId])
   @@map("votes")
 }

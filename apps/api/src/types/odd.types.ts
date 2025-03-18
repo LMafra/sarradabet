@@ -3,12 +3,6 @@ import { z } from "zod";
 
 export type OddEntity = Odd;
 
-// DTO Types
-export type CreateOddDTO = {
-  title: string;
-  value: string;
-};
-
 export type OddResponse = OddEntity & {
   odds: OddEntity[];
   totalVotes?: number;
@@ -24,7 +18,7 @@ export type OddQueryParams = {
 
 export const CreateOddSchema = z.object({
   title: z.string().min(2).max(50),
-  value: z.number().positive(),
+  value: z.coerce.number().positive(),
 });
 
-export type CreateOddInput = z.infer<typeof CreateOddSchema>;
+export type CreateOddDTO = z.infer<typeof CreateOddSchema>;
