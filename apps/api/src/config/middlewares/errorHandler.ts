@@ -31,6 +31,9 @@ export const errorHandler = (
   }
 
   return new ApiResponse(res)
-    .status(500)
-    .error(err.message, { stack: err.stack });
+  .status(500)
+  .error(err.message, [{
+    message: err.message,
+    stack: err.stack
+  }]);
 };
