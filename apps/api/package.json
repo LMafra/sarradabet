@@ -8,11 +8,11 @@
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "prisma:generate": "cd apps/api && npx prisma generate",
-    "prisma:migrate:dev": "cd apps/api && npx prisma migrate dev --name",
-    "prisma:migrate:deploy": "cd apps/api && npx prisma migrate deploy",
-    "prisma:studio": "cd apps/api && npx prisma studio",
-    "prisma:check": "cd apps/api && npx prisma migrate status"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev --name",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "prisma:check": "prisma migrate status"
   },
   "keywords": [],
   "author": "",
