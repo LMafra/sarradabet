@@ -22,22 +22,21 @@ CREATE TABLE "bets" (
 );
 
 -- CreateTable
-CREATE TABLE "odds" (
+CREATE TABLE "odd" (
     "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
     "value" DOUBLE PRECISION NOT NULL,
-    "result" "BetResult" NOT NULL DEFAULT 'pending',
     "betId" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "odds_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "odd_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "votes" (
     "id" SERIAL NOT NULL,
     "oddId" INTEGER NOT NULL,
-    "userId" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "votes_pkey" PRIMARY KEY ("id")
@@ -74,16 +73,13 @@ CREATE INDEX "bets_status_idx" ON "bets"("status");
 CREATE INDEX "bets_created_at_idx" ON "bets"("created_at");
 
 -- CreateIndex
-CREATE INDEX "odds_betId_idx" ON "odds"("betId");
+CREATE INDEX "odd_betId_idx" ON "odd"("betId");
 
 -- CreateIndex
-CREATE INDEX "odds_value_idx" ON "odds"("value");
+CREATE INDEX "odd_value_idx" ON "odd"("value");
 
 -- CreateIndex
 CREATE INDEX "votes_oddId_idx" ON "votes"("oddId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "votes_userId_oddId_key" ON "votes"("userId", "oddId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "admins_username_key" ON "admins"("username");
@@ -98,10 +94,10 @@ CREATE INDEX "admin_actions_adminId_idx" ON "admin_actions"("adminId");
 CREATE INDEX "admin_actions_actionType_idx" ON "admin_actions"("actionType");
 
 -- AddForeignKey
-ALTER TABLE "odds" ADD CONSTRAINT "odds_betId_fkey" FOREIGN KEY ("betId") REFERENCES "bets"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "odd" ADD CONSTRAINT "odd_betId_fkey" FOREIGN KEY ("betId") REFERENCES "bets"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "votes" ADD CONSTRAINT "votes_oddId_fkey" FOREIGN KEY ("oddId") REFERENCES "odds"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "votes" ADD CONSTRAINT "votes_oddId_fkey" FOREIGN KEY ("oddId") REFERENCES "odd"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "admin_actions" ADD CONSTRAINT "admin_actions_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "admins"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
