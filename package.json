@@ -8,9 +8,10 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "prisma:generate": "cd apps/api && npx prisma generate",
-    "prisma:migrate": "cd apps/api && npx prisma migrate dev --name init_postgres",
-    "prisma:deploy": "cd apps/api && npx prisma migrate deploy",
-    "prisma:reset": "cd apps/api && npx prisma migrate reset -f"
+    "prisma:migrate:dev": "cd apps/api && npx prisma migrate dev --name",
+    "prisma:migrate:deploy": "cd apps/api && npx prisma migrate deploy",
+    "prisma:studio": "cd apps/api && npx prisma studio",
+    "prisma:check": "cd apps/api && npx prisma migrate status"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
