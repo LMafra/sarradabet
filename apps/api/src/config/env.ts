@@ -9,7 +9,7 @@ const envSchema = z.object({
     .default("development"),
   PORT: z.coerce.number().default(3001),
   CORS_ORIGINS: z.string().default("http://localhost:5173"),
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.string().regex(/^postgresql:\/\/.+/),
   API_KEY: z.string().optional(),
   JWT_SECRET: z.string().optional(),
 });
