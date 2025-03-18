@@ -1,0 +1,195 @@
+2025-03-17 19:11:58 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:30:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:13:56 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:30:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:13:57 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:30:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:13:58 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:30:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:15:19 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:30:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:15:27 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:30:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:15:40 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:30:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:18:07 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:30:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:23:03 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:27:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:29:32 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:27:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:30:48 [[31merror[39m] TypeError: next is not a function
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:30:5)
+    at listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:13:24)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at <anonymous> (/home/lmafra/sarradabet/apps/api/src/utils/validator.ts:27:7)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/lmafra/sarradabet/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/lmafra/sarradabet/node_modules/express/lib/router/layer.js:95:5)
+    at /home/lmafra/sarradabet/node_modules/express/lib/router/index.js:284:15
+2025-03-17 19:39:48 [[31merror[39m] PrismaClientValidationError: 
+Invalid `tx.bet.create()` invocation in
+/home/lmafra/sarradabet/apps/api/src/repositories/bet.repository.ts:26:19
+
+  23 
+  24 export const createBetWithOdds = async (data: CreateBetDTO) => {
+  25   return prisma.$transaction(async (tx) => {
+→ 26     return tx.bet.create({
+           data: {
+             title: "Quem vai ganhar?",
+             description: "Vote no jogador vencedor:",
+             odds: {
+               create: [
+                 {
+                   title: undefined,
+                   value: 2.3
+                 },
+                 {
+                   title: undefined,
+                   value: 1.5
+                 }
+               ]
+             }
+           },
+           include: {
+             odds: true
+           }
+         })
+
+Argument `title` is missing.
+    at Cn (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at Wn.handleRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:7177)
+    at Wn.handleAndLogRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6858)
+    at Wn.request (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6565)
+    at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
+    at async Proxy._transactionWithCallback (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:8428)
+    at async createBet (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:40:20)
+2025-03-17 20:22:00 [[31merror[39m] PrismaClientValidationError: 
+Invalid `tx.bet.create()` invocation in
+/home/lmafra/sarradabet/apps/api/src/repositories/bet.repository.ts:26:19
+
+  23 
+  24 export const createBetWithOdds = async (data: CreateBetDTO) => {
+  25   return prisma.$transaction(async (tx) => {
+→ 26     return tx.bet.create({
+           data: {
+             title: "Quem vai ganhar?",
+             description: "Vote no jogador vencedor:",
+             odds: {
+               create: [
+                 {
+                   title: undefined,
+                   value: 2.3
+                 },
+                 {
+                   title: undefined,
+                   value: 1.5
+                 }
+               ]
+             }
+           },
+           include: {
+             odds: true
+           }
+         })
+
+Argument `title` is missing.
+    at Cn (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at Wn.handleRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:7177)
+    at Wn.handleAndLogRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6858)
+    at Wn.request (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6565)
+    at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
+    at async Proxy._transactionWithCallback (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:8428)
+    at async createBet (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:40:20)
