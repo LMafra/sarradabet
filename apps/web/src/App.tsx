@@ -5,12 +5,12 @@ import "./App.css";
 function App() {
   return (
     <Router>
-    <main>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-      </Routes>
-    </main>
-  </Router>
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </main>
+    </Router>
   );
 }
 

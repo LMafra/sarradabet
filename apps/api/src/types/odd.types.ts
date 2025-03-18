@@ -1,10 +1,11 @@
-import { Odds } from "@prisma/client";
+import { Odd } from "@prisma/client";
 import { z } from "zod";
 
-export type OddEntity = Odds;
+export type OddEntity = Odd;
 
 // DTO Types
 export type CreateOddDTO = {
+  title: string;
   value: string;
 };
 
@@ -22,6 +23,7 @@ export type OddQueryParams = {
 };
 
 export const CreateOddSchema = z.object({
+  title: z.string().min(2).max(50),
   value: z.number().positive(),
 });
 

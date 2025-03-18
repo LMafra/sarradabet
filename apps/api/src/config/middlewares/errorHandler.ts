@@ -9,6 +9,10 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
   if (err instanceof ApiError) {
     logger.warn(`Handled Error: ${err.message}`);
     return new ApiResponse(res)

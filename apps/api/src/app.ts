@@ -3,28 +3,26 @@ import cors from "cors";
 import morgan from "morgan";
 import { config } from "./config/env";
 import { errorHandler } from "./config/middlewares/errorHandler";
-import { router } from "./routes";
+import router from "./routes";
 import { logger } from "./utils/logger";
 
-// Initialize Express application
 export const app = express();
 
-// Configure middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: config.CORS_ORIGINS.split(","),
+    origin: config.CORS_ORIGINS.split(",").map((origin) => origin.trim()),
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   }),
 );
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// HTTP request logging
 if (config.NODE_ENV !== "test") {
   app.use(morgan(config.NODE_ENV === "development" ? "dev" : "combined"));
 }
 
-// Health check endpoint
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -33,10 +31,8 @@ app.get("/health", (req, res) => {
   });
 });
 
-// API routes
 app.use("/api/v1", router);
 
-// Handle 404 errors
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,
@@ -44,10 +40,8 @@ app.use((req, res, next) => {
   });
 });
 
-// Global error handler
 app.use(errorHandler);
 
-// Handle uncaught exceptions
 process.on("uncaughtException", (error) => {
   logger.error(`Uncaught Exception: ${error.message}`, error);
   process.exit(1);

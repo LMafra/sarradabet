@@ -27,6 +27,7 @@ model Bet {
 
 model Odd {
   id        Int  @id @default(autoincrement())
+  title     String
   value     Float
   betId     Int
   votes     Vote[]

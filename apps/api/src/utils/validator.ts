@@ -1,6 +1,6 @@
 // apps/api/src/utils/validator.ts
 import { Request, Response, NextFunction } from "express";
-import { ZodSchema } from "zod";
+import { z, ZodSchema } from "zod";
 import { ValidationError } from "../utils/errors";
 
 /**
@@ -8,9 +8,10 @@ import { ValidationError } from "../utils/errors";
  * @param schema Zod schema to validate against
  * @param property Request property to validate ('body', 'query', or 'params')
  */
+
 export const validateRequest = (
   schema: ZodSchema,
-  property: "body" | "query" | "params",
+  property: "body" | "query",
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -25,7 +26,6 @@ export const validateRequest = (
         throw new ValidationError(errors);
       }
 
-      // Assign parsed data back to request
       req[property] = result.data;
       next();
     } catch (error) {
@@ -61,8 +61,8 @@ export const validateOdds = (odds: number[]) => {
 
 // Common validation schemas
 export const PaginationSchema = z.object({
-  page: z.number().int().positive().optional().default(1),
-  limit: z.number().int().positive().max(100).optional().default(10),
+  page: z.coerce.number().int().positive().optional().default(1),
+  limit: z.coerce.number().int().positive().max(100).optional().default(10),
 });
 
 export type PaginationInput = z.infer<typeof PaginationSchema>;

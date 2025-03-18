@@ -1,9 +1,10 @@
-import { Bet, BetStatus, BetResult } from "@prisma/client";
+import { Odd, Bet, BetStatus, BetResult } from "@prisma/client";
+import { CreateOddDTO, CreateOddSchema } from "./odd.types";
 import { z } from "zod";
 
 // Base Prisma-generated types
 export type BetEntity = Bet;
-export type OddsEntity = Odds;
+export type OddsEntity = Odd;
 
 // DTO Types
 export type CreateBetDTO = {
@@ -37,15 +38,9 @@ export const BetStatusSchema = z.nativeEnum(BetStatus);
 export const BetResultSchema = z.nativeEnum(BetResult);
 
 export const CreateBetSchema = z.object({
-  title: z.string().min(3).max(255),
+  title: z.string().min(2).max(50),
   description: z.string().optional(),
-  odds: z
-    .array(
-      z.object({
-        value: z.number().positive(),
-      }),
-    )
-    .min(1),
+  odds: z.array(CreateOddSchema).min(1),
 });
 
 export const UpdateBetSchema = CreateBetSchema.partial().extend({
