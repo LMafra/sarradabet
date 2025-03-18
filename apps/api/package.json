@@ -6,10 +6,13 @@
     "dev": "npx tsx src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "lint:fix": "eslint . --ext .ts --fix",
+    "prisma:generate": "cd apps/api && npx prisma generate",
+    "prisma:migrate:dev": "cd apps/api && npx prisma migrate dev --name",
+    "prisma:migrate:deploy": "cd apps/api && npx prisma migrate deploy",
+    "prisma:studio": "cd apps/api && npx prisma studio",
+    "prisma:check": "cd apps/api && npx prisma migrate status"
   },
   "keywords": [],
   "author": "",
