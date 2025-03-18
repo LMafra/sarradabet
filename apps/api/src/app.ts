@@ -33,7 +33,7 @@ app.get("/health", (req, res) => {
 
 app.use("/api/v1", router);
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: "Resource not found",

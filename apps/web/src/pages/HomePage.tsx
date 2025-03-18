@@ -1,8 +1,8 @@
 // apps/web/src/pages/HomePage.tsx
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import betService from "../services/betService";
-import { Bet } from '../types/bet';
+import { Bet } from "../types/bet";
 
 const HomePage = () => {
   const [bets, setBets] = useState<Bet[]>([]);
@@ -18,7 +18,7 @@ const HomePage = () => {
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError('An unexpected error occurred');
+          setError("An unexpected error occurred");
         }
       } finally {
         setIsLoading(false);
@@ -49,9 +49,14 @@ const HomePage = () => {
       {/* Navegação */}
       <nav className="bg-purple-900/20 border-b border-purple-500/30">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-yellow-400">SarradaBet</Link>
+          <Link to="/" className="text-2xl font-bold text-yellow-400">
+            SarradaBet
+          </Link>
           <div className="hidden md:flex space-x-6">
-            <Link to="/create-bet" className="bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-300 transition-colors">
+            <Link
+              to="/create-bet"
+              className="bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-300 transition-colors"
+            >
               Nova Aposta
             </Link>
           </div>
@@ -62,17 +67,24 @@ const HomePage = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="bg-gradient-to-r from-purple-900/40 to-yellow-900/20 rounded-xl p-8 border border-purple-500/30">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Faça Suas Apostas<br />
+            Faça Suas Apostas
+            <br />
             <span className="text-yellow-400">Seja o Maior Sarrador</span>
           </h1>
           <p className="text-gray-300 text-lg mb-8">
             Preveja, vote e ganhe nos maiores eventos do mundo
           </p>
           <div className="flex gap-4">
-            <Link to="/create-bet" className="bg-yellow-400 text-black px-8 py-3 rounded-lg font-bold hover:bg-yellow-300 transition-colors">
+            <Link
+              to="/create-bet"
+              className="bg-yellow-400 text-black px-8 py-3 rounded-lg font-bold hover:bg-yellow-300 transition-colors"
+            >
               Criar Aposta
             </Link>
-            <Link to="/bets" className="bg-purple-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-purple-500 transition-colors">
+            <Link
+              to="/bets"
+              className="bg-purple-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-purple-500 transition-colors"
+            >
               Ver Todas
             </Link>
           </div>
@@ -81,7 +93,9 @@ const HomePage = () => {
 
       {/* Listagem de Apostas */}
       <div className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold mb-6 text-yellow-400">Apostas Recentes</h2>
+        <h2 className="text-2xl font-bold mb-6 text-yellow-400">
+          Apostas Recentes
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {bets.map((bet) => (
             <div
