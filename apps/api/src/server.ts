@@ -3,7 +3,6 @@ import { config } from "./config/env";
 import { logger } from "./utils/logger";
 import { prisma } from "./config/db";
 
-// Database connection check
 const checkDatabaseConnection = async () => {
   try {
     await prisma.$queryRaw`SELECT 1`;
@@ -14,7 +13,6 @@ const checkDatabaseConnection = async () => {
   }
 };
 
-// Start server function
 const startServer = async () => {
   const PORT = config.PORT || 3001;
 
@@ -25,7 +23,6 @@ const startServer = async () => {
       logger.info(`Server running in ${config.NODE_ENV} mode on port ${PORT}`);
     });
 
-    // Handle graceful shutdown
     const shutdown = async () => {
       logger.info("Shutting down server...");
       server.close(async () => {
@@ -43,7 +40,6 @@ const startServer = async () => {
   }
 };
 
-// Start the server
 if (process.env.NODE_ENV !== "test") {
   startServer();
 }

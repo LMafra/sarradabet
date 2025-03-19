@@ -1,6 +1,12 @@
 import { Response } from "express";
 
-type ApiResponseData = Record<string, unknown> | unknown[] | string | number | boolean | null;
+type ApiResponseData =
+  | Record<string, unknown>
+  | unknown[]
+  | string
+  | number
+  | boolean
+  | null;
 
 type ApiErrorResponse = {
   path?: string;
@@ -18,7 +24,11 @@ export class ApiResponse {
     });
   }
 
-  error(message: string, errors?: ApiErrorResponse[], statusCode: number = 400) {
+  error(
+    message: string,
+    errors?: ApiErrorResponse[],
+    statusCode: number = 400,
+  ) {
     this.res.status(statusCode).json({
       success: false,
       message,

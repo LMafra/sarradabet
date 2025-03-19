@@ -30,10 +30,10 @@ export const errorHandler = (
     return new ApiResponse(res).status(500).error("Internal Server Error");
   }
 
-  return new ApiResponse(res)
-  .status(500)
-  .error(err.message, [{
-    message: err.message,
-    stack: err.stack
-  }]);
+  return new ApiResponse(res).status(500).error(err.message, [
+    {
+      message: err.message,
+      stack: err.stack,
+    },
+  ]);
 };

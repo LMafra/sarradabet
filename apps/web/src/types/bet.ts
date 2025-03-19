@@ -1,13 +1,24 @@
 export type Bet = {
-  id: string;
+  id: number;
   title: string;
   description?: string;
-  category?: string;
+  categoryId?: number;
   odds: {
-    id: string;
+    id: number;
     title: string;
     value: number;
+    totalVotes: number;
   }[];
   totalVotes?: number;
   createdAt: string;
+};
+
+export type CreateBetDto = {
+  title: string;
+  description?: string;
+  categoryId?: number;
+  odds: Array<{
+    title: string;
+    value: number;
+  }>;
 };

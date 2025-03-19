@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import {
-  createBetWithOdds,
-  getAllBetsFromRepository,
-  getBetByIdFromRepository,
-  updateBetFromRepository,
-} from "../repositories/bet.repository";
+  getAllCategoriesFromRepository,
+  createCategoryFromRepository,
+  getCategoryByIdFromRepository,
+  updateCategoryFromRepository,
+} from "../repositories/category.repository";
 import { ApiResponse } from "../utils/api/response";
 
-export const listAllBets = async (
+export const listAllCategories = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -20,7 +20,7 @@ export const listAllBets = async (
       sortOrder = "desc",
     } = req.query;
 
-    const bets = await getAllBetsFromRepository(
+    const categories = await getAllCategoriesFromRepository(
       parseInt(page as string, 10),
       parseInt(limit as string, 10),
       sortBy as string,
@@ -28,11 +28,11 @@ export const listAllBets = async (
     );
 
     new ApiResponse(res).success({
-      data: bets,
+      data: categories,
       meta: {
         page: Number(page),
         limit: Number(limit),
-        count: bets.length,
+        count: categories.length,
       },
     });
   } catch (error) {
@@ -40,42 +40,45 @@ export const listAllBets = async (
   }
 };
 
-export const createBet = async (
+export const createCategory = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const newBet = await createBetWithOdds(req.body);
-    new ApiResponse(res).success(newBet, 201);
+    const newCategory = await createCategoryFromRepository(req.body);
+    new ApiResponse(res).success(newCategory, 201);
   } catch (error) {
     next(error);
   }
 };
 
-export const showBet = async (
+export const showCategory = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const betId = Number(req.params.id);
-    const bet = await getBetByIdFromRepository(betId);
-    new ApiResponse(res).success(bet);
+    const categoryId = Number(req.params.id);
+    const category = await getCategoryByIdFromRepository(categoryId);
+    new ApiResponse(res).success(category);
   } catch (error) {
     next(error);
   }
 };
 
-export const updateBet = async (
+export const updateCategory = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const betId = Number(req.params.id);
-    const updatedBet = await updateBetFromRepository(betId, req.body);
-    new ApiResponse(res).success(updatedBet);
+    const categoryId = Number(req.params.id);
+    const updatedCategory = await updateCategoryFromRepository(
+      categoryId,
+      req.body,
+    );
+    new ApiResponse(res).success(updatedCategory);
   } catch (error) {
     next(error);
   }

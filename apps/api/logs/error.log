@@ -193,3 +193,161 @@ Argument `title` is missing.
     at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
     at async Proxy._transactionWithCallback (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:8428)
     at async createBet (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:40:20)
+2025-03-19 12:00:35 [[31merror[39m] PrismaClientKnownRequestError: 
+Invalid `prisma.bet.findMany()` invocation in
+/home/lmafra/sarradabet/apps/api/src/repositories/bet.repository.ts:14:21
+
+  11 ) => {
+  12   const skip = (page - 1) * limit;
+  13 
+→ 14   return prisma.bet.findMany(
+The column `bets.result` does not exist in the current database.
+    at Wn.handleRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:7534)
+    at Wn.handleAndLogRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6858)
+    at Wn.request (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6565)
+    at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
+    at async listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:21:18)
+2025-03-19 12:03:59 [[31merror[39m] PrismaClientKnownRequestError: 
+Invalid `prisma.bet.findMany()` invocation in
+/home/lmafra/sarradabet/apps/api/src/repositories/bet.repository.ts:14:21
+
+  11 ) => {
+  12   const skip = (page - 1) * limit;
+  13 
+→ 14   return prisma.bet.findMany(
+The column `bets.result` does not exist in the current database.
+    at Wn.handleRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:7534)
+    at Wn.handleAndLogRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6858)
+    at Wn.request (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6565)
+    at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
+    at async listAllBets (/home/lmafra/sarradabet/apps/api/src/controllers/bet.controller.ts:21:18)
+2025-03-19 12:15:33 [[31merror[39m] PrismaClientValidationError: 
+Invalid `prisma.category.findMany()` invocation in
+/home/lmafra/sarradabet/apps/api/src/repositories/category.repository.ts:14:26
+
+  11 ) => {
+  12   const skip = (page - 1) * limit;
+  13 
+→ 14   return prisma.category.findMany({
+         skip: 0,
+         take: 10,
+         orderBy: {
+           createdAt: "desc",
+           ~~~~~~~~~
+       ?   id?: SortOrder,
+       ?   title?: SortOrder,
+       ?   Bet?: BetOrderByRelationAggregateInput
+         }
+       })
+
+Unknown argument `createdAt`. Available options are marked with ?.
+    at Cn (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at Wn.handleRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:7177)
+    at Wn.handleAndLogRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6858)
+    at Wn.request (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6565)
+    at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
+    at async listAllCategories (/home/lmafra/sarradabet/apps/api/src/controllers/category.controller.ts:18:24)
+2025-03-19 12:16:24 [[31merror[39m] PrismaClientValidationError: 
+Invalid `prisma.category.findMany()` invocation in
+/home/lmafra/sarradabet/apps/api/src/repositories/category.repository.ts:14:26
+
+  11 ) => {
+  12   const skip = (page - 1) * limit;
+  13 
+→ 14   return prisma.category.findMany({
+         skip: 0,
+         take: 10,
+         orderBy: {
+           createdAt: "desc",
+           ~~~~~~~~~
+       ?   id?: SortOrder,
+       ?   title?: SortOrder,
+       ?   Bet?: BetOrderByRelationAggregateInput
+         }
+       })
+
+Unknown argument `createdAt`. Available options are marked with ?.
+    at Cn (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at Wn.handleRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:7177)
+    at Wn.handleAndLogRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6858)
+    at Wn.request (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6565)
+    at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
+    at async listAllCategories (/home/lmafra/sarradabet/apps/api/src/controllers/category.controller.ts:18:24)
+2025-03-19 12:16:31 [[31merror[39m] PrismaClientValidationError: 
+Invalid `prisma.category.findMany()` invocation in
+/home/lmafra/sarradabet/apps/api/src/repositories/category.repository.ts:14:26
+
+  11 ) => {
+  12   const skip = (page - 1) * limit;
+  13 
+→ 14   return prisma.category.findMany({
+         skip: 0,
+         take: 10,
+         orderBy: {
+           createdAt: "desc",
+           ~~~~~~~~~
+       ?   id?: SortOrder,
+       ?   title?: SortOrder,
+       ?   Bet?: BetOrderByRelationAggregateInput
+         }
+       })
+
+Unknown argument `createdAt`. Available options are marked with ?.
+    at Cn (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at Wn.handleRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:7177)
+    at Wn.handleAndLogRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6858)
+    at Wn.request (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6565)
+    at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
+    at async listAllCategories (/home/lmafra/sarradabet/apps/api/src/controllers/category.controller.ts:18:24)
+2025-03-19 12:16:32 [[31merror[39m] PrismaClientValidationError: 
+Invalid `prisma.category.findMany()` invocation in
+/home/lmafra/sarradabet/apps/api/src/repositories/category.repository.ts:14:26
+
+  11 ) => {
+  12   const skip = (page - 1) * limit;
+  13 
+→ 14   return prisma.category.findMany({
+         skip: 0,
+         take: 10,
+         orderBy: {
+           createdAt: "desc",
+           ~~~~~~~~~
+       ?   id?: SortOrder,
+       ?   title?: SortOrder,
+       ?   Bet?: BetOrderByRelationAggregateInput
+         }
+       })
+
+Unknown argument `createdAt`. Available options are marked with ?.
+    at Cn (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at Wn.handleRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:7177)
+    at Wn.handleAndLogRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6858)
+    at Wn.request (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6565)
+    at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
+    at async listAllCategories (/home/lmafra/sarradabet/apps/api/src/controllers/category.controller.ts:18:24)
+2025-03-19 12:17:20 [[31merror[39m] PrismaClientValidationError: 
+Invalid `prisma.category.findMany()` invocation in
+/home/lmafra/sarradabet/apps/api/src/repositories/category.repository.ts:14:26
+
+  11 ) => {
+  12   const skip = (page - 1) * limit;
+  13 
+→ 14   return prisma.category.findMany({
+         skip: 0,
+         take: 10,
+         orderBy: {
+           createdAt: "desc",
+           ~~~~~~~~~
+       ?   id?: SortOrder,
+       ?   title?: SortOrder,
+       ?   Bet?: BetOrderByRelationAggregateInput
+         }
+       })
+
+Unknown argument `createdAt`. Available options are marked with ?.
+    at Cn (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:29:1363)
+    at Wn.handleRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:7177)
+    at Wn.handleAndLogRequestError (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6858)
+    at Wn.request (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:121:6565)
+    at async l (/home/lmafra/sarradabet/node_modules/@prisma/client/runtime/library.js:130:10067)
+    at async listAllCategories (/home/lmafra/sarradabet/apps/api/src/controllers/category.controller.ts:18:24)
