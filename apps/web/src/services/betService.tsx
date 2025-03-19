@@ -24,7 +24,7 @@ const betService = {
 
   getById: async (id: number): Promise<{ data: Bet }> => {
     const response = await api.get(`/${id}`);
-    return response.data.data;
+    return response.data;
   },
 
   create: async (data: CreateBetDto): Promise<{ data: Bet }> => {

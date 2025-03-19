@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Bet, CreateBetDto } from "../types/bet";
 import betService from "../services/betService";
+import { Category } from "../types/category";
 import categoryService from "../services/categoryService";
 
 interface CreateBetModalProps {
@@ -18,12 +19,10 @@ const CreateBetModal = ({
   const [formData, setFormData] = useState<CreateBetDto>({
     title: "",
     description: "",
-    categoryId: "",
+    categoryId: undefined,
     odds: [{ title: "", value: 1 }],
   });
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
-    [],
-  );
+  const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -68,7 +67,7 @@ const CreateBetModal = ({
       setFormData({
         title: "",
         description: "",
-        categoryId: "",
+        categoryId: undefined,
         odds: [{ title: "", value: 1 }],
       });
     } catch (err) {
@@ -154,12 +153,13 @@ const CreateBetModal = ({
               </label>
               <select
                 value={formData.categoryId}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const value = e.target.value;
                   setFormData((prev) => ({
                     ...prev,
-                    categoryId: e.target.value,
+                    categoryId: value ? Number(value) : undefined,
                   }))
-                }
+                }}
                 className="w-full bg-gray-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-yellow-400"
               >
                 <option value="">Selecione uma categoria</option>

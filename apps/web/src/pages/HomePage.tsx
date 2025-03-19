@@ -66,12 +66,12 @@ const HomePage = () => {
     });
 
     return Array.from(groups.entries())
-      .filter(([group]) => group.bets.length > 0)
-      .map(([id, group]) => ({
-        id,
-        name: group.category?.title || "Sem Categoria",
-        bets: group.bets,
-      }));
+    .filter(([id, group]) => group.bets.length > 0)
+    .map(([id, group]) => ({
+      id,
+      name: group.category?.title || "Sem Categoria",
+      bets: group.bets,
+    }));
   }, [betsResponse, categoriesResponse]);
 
   const filteredBets = useMemo(() => {

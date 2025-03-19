@@ -26,7 +26,7 @@ const BetCard = ({ bet, onVoteCreated }: BetCardProps) => {
   const fetchUpdatedOdds = async () => {
     try {
       const response = await betService.getById(bet.id);
-      setOddsData(response.odds);
+      setOddsData(response.data.odds);
       onVoteCreated?.();
     } catch (error) {
       console.error("Error updating odds:", error);
@@ -34,6 +34,8 @@ const BetCard = ({ bet, onVoteCreated }: BetCardProps) => {
   };
 
   const fetchCategory = useCallback(async () => {
+    if (typeof bet.categoryId !== 'number') return;
+
     try {
       const category = await categoryService.getById(bet.categoryId);
       setCategoryData(category.data);
