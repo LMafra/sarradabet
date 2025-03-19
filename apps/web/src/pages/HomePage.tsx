@@ -66,7 +66,7 @@ const HomePage = () => {
     });
 
     return Array.from(groups.entries())
-    .filter(([id, group]) => group.bets.length > 0)
+    .filter(([, group]) => group.bets.length > 0)
     .map(([id, group]) => ({
       id,
       name: group.category?.title || "Sem Categoria",
