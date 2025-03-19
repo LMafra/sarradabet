@@ -8,41 +8,41 @@ import { logger } from "./utils/logger";
 
 export const app = express();
 
-// 1. Middleware CORS melhorado
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
     try {
       const allowedOrigins = new Set([
-        ...config.CORS_ORIGINS.split(',')
-          .map(o => o.trim().replace(/\/$/, ''))
+        ...config.CORS_ORIGINS.split(",")
+          .map((o) => o.trim().replace(/\/$/, ""))
           .filter(Boolean),
       ]);
 
-      if (!origin || allowedOrigins.has(origin) || allowedOrigins.has('*')) {
+      if (!origin || allowedOrigins.has(origin) || allowedOrigins.has("*")) {
         return callback(null, true);
       }
 
-      logger.warn(`CORS Blocked: ${origin} | Allowed: ${Array.from(allowedOrigins).join(', ')}`);
+      logger.warn(
+        `CORS Blocked: ${origin} | Allowed: ${Array.from(allowedOrigins).join(", ")}`,
+      );
       callback(new Error(`Origin not allowed: ${origin}`), false);
-
     } catch (error) {
-      logger.error('CORS Configuration Error:', error);
-      callback(new Error('CORS misconfiguration'), false);
+      logger.error("CORS Configuration Error:", error);
+      callback(new Error("CORS misconfiguration"), false);
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   maxAge: 86400,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
 
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.sendStatus(204);
 });
 
@@ -54,7 +54,7 @@ if (config.NODE_ENV !== "test") {
 }
 
 app.get("/health", (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.status(200).json({
     status: "ok",
     timestamp: new Date().toISOString(),
@@ -65,7 +65,7 @@ app.get("/health", (req, res) => {
 app.use("/api/v1", router);
 
 app.use((req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.status(404).json({
     success: false,
     message: "Resource not found",

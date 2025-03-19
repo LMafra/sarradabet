@@ -16,7 +16,6 @@ prisma.$on("error" as never, (e: { message: string }) => {
   logger.error(`Prisma Error: ${e.message}`);
 });
 
-// Graceful shutdown
 const shutdownPrisma = async () => {
   logger.info("Disconnecting from database...");
   await prisma.$disconnect();

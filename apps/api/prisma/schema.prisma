@@ -4,22 +4,32 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
   extensions = [pg_trgm]
 }
 
+model Category {
+  id    Int    @id @default(autoincrement())
+  title String @db.VarChar(50)
+  bet   Bet[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+}
+
 model Bet {
-  id          Int   @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String    @db.VarChar(255)
   description String?
   status      BetStatus @default(open)
-  result      BetResult @default(pending)
+  categoryId  Int
   odds        Odd[]
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   resolvedAt  DateTime? @map("resolved_at")
+
+  category Category @relation(fields: [categoryId], references: [id])
 
   @@index([status])
   @@index([createdAt])
@@ -27,15 +37,16 @@ model Bet {
 }
 
 model Odd {
-  id        Int  @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
   value     Float
   betId     Int
   votes     Vote[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  result    OddResult @default(pending)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
 
-  bet       Bet      @relation(fields: [betId], references: [id])
+  bet Bet @relation(fields: [betId], references: [id])
 
   @@index([betId])
   @@index([value])
@@ -43,37 +54,37 @@ model Odd {
 }
 
 model Vote {
-  id        Int  @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   oddId     Int
   createdAt DateTime @default(now()) @map("created_at")
 
-  odd       Odd     @relation(fields: [oddId], references: [id])
+  odd Odd @relation(fields: [oddId], references: [id])
 
   @@index([oddId])
   @@map("votes")
 }
 
 model Admin {
-  id           Int   @id @default(autoincrement())
-  username     String    @unique
-  email        String    @unique
-  passwordHash String    @map("password_hash")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
+  email        String        @unique
+  passwordHash String        @map("password_hash")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
   actions      AdminAction[]
 
   @@map("admins")
 }
 
 model AdminAction {
-  id          Int  @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   adminId     Int
   actionType  String
   targetId    Int
   description String?
   createdAt   DateTime @default(now()) @map("created_at")
 
-  admin       Admin    @relation(fields: [adminId], references: [id])
+  admin Admin @relation(fields: [adminId], references: [id])
 
   @@index([adminId])
   @@index([actionType])
@@ -86,7 +97,7 @@ enum BetStatus {
   resolved
 }
 
-enum BetResult {
+enum OddResult {
   pending
   won
   lost
