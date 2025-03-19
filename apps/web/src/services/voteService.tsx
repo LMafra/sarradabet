@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ApiResponse, PaginationMeta } from '../types/api';
+import { ApiResponse, PaginationMeta } from "../types/api";
 import { Vote, CreateVoteDto } from "../types/vote";
 
 const VITE_BASE_URL = import.meta.env.VITE_API_URL;
@@ -14,7 +14,8 @@ export const api = axios.create({
 
 const voteService = {
   getAll: async (): Promise<{ data: Vote[]; meta: PaginationMeta }> => {
-    const response = await api.get<ApiResponse<{ data: Vote[]; meta: PaginationMeta }>>("/");
+    const response =
+      await api.get<ApiResponse<{ data: Vote[]; meta: PaginationMeta }>>("/");
     if (!response.data.success) {
       throw new Error("Failed to fetch votes");
     }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ApiResponse, PaginationMeta } from '../types/api';
+import { ApiResponse, PaginationMeta } from "../types/api";
 import { Bet, CreateBetDto } from "../types/bet";
 
 const VITE_BASE_URL = import.meta.env.VITE_API_URL;
@@ -14,7 +14,8 @@ export const api = axios.create({
 
 const betService = {
   getAll: async (): Promise<{ data: Bet[]; meta: PaginationMeta }> => {
-    const response = await api.get<ApiResponse<{ data: Bet[]; meta: PaginationMeta }>>("/");
+    const response =
+      await api.get<ApiResponse<{ data: Bet[]; meta: PaginationMeta }>>("/");
     if (!response.data.success) {
       throw new Error("Failed to fetch bets");
     }

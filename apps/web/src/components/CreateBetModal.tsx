@@ -72,7 +72,8 @@ const CreateBetModal = ({
         odds: [{ title: "", value: 1 }],
       });
     } catch (err) {
-      const error = err instanceof Error ? err : new Error("Ocorreu um erro inesperado.");
+      const error =
+        err instanceof Error ? err : new Error("Ocorreu um erro inesperado.");
       setError(error.message);
     } finally {
       setIsSubmitting(false);

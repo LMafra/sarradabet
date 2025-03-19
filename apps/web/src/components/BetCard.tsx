@@ -23,8 +23,6 @@ const BetCard = ({ bet, onVoteCreated }: BetCardProps) => {
     setOddsData(bet.odds);
   }, [bet.odds]);
 
-
-
   const fetchUpdatedOdds = async () => {
     try {
       const response = await betService.getById(bet.id);
@@ -77,9 +75,7 @@ const BetCard = ({ bet, onVoteCreated }: BetCardProps) => {
           <span className="text-gray-400 text-sm">
             🗳️ {bet.totalVotes ?? 0} votos
           </span>
-          <span className="text-gray-400 text-sm">
-            📅 {formattedDate}
-          </span>
+          <span className="text-gray-400 text-sm">📅 {formattedDate}</span>
         </div>
       </div>
     </div>
