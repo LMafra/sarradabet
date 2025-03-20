@@ -15,7 +15,11 @@ export const api = axios.create({
 const betService = {
   getAll: async (): Promise<{ data: Bet[]; meta: PaginationMeta }> => {
     const response =
-      await api.get<ApiResponse<{ data: Bet[]; meta: PaginationMeta }>>("/");
+      await api.get<ApiResponse<{ data: Bet[]; meta: PaginationMeta }>>("/", {
+        params: {
+          limit: 50
+        }
+      });
     if (!response.data.success) {
       throw new Error("Failed to fetch bets");
     }
