@@ -16,9 +16,13 @@ export type Bet = {
 export type CreateBetDto = {
   title: string;
   description?: string;
-  categoryId?: number;
+  categoryId: number; // Required to match backend validation
   odds: Array<{
     title: string;
     value: number;
   }>;
+};
+
+export type UpdateBetDto = Partial<CreateBetDto> & {
+  status?: "open" | "closed" | "resolved";
 };

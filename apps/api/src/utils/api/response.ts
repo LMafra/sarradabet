@@ -18,10 +18,13 @@ export class ApiResponse {
   constructor(private res: Response) {}
 
   success(data: ApiResponseData, statusCode: number = 200) {
-    this.res.status(statusCode).json({
-      success: true,
-      data,
-    });
+    // If the payload already contains a success flag, assume it's a fully-shaped response
+    if (data && typeof data === "object" && (data as Record<string, unknown>).hasOwnProperty("success")) {
+      this.res.status(statusCode).json(data);
+      return;
+    }
+
+    this.res.status(statusCode).json({ success: true, data });
   }
 
   error(
