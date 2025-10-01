@@ -53,7 +53,7 @@ export const betWithOddsFactory = Factory.define<BetWithOddsAttrs>(
       id: sequence,
       title: faker.commerce.productName(),
       description: faker.commerce.productDescription(),
-      status: "open",
+      status: BetStatus.open,
       categoryId,
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),

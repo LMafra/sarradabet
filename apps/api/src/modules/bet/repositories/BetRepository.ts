@@ -49,7 +49,14 @@ export class BetRepository extends BaseRepository<
       },
     });
 
-    return bets.map(this.transformBetWithVotes);
+    return bets.map((b) =>
+      this.transformBetWithVotes(
+        b as unknown as BetEntity & {
+          odds: Array<OddsEntity & { _count: { votes: number } }>;
+          category?: { id: number; title: string };
+        },
+      ),
+    );
   }
 
   async findUnique(where: { id: number }): Promise<BetWithOdds | null> {
@@ -141,7 +148,12 @@ export class BetRepository extends BaseRepository<
       },
     });
 
-    return this.transformBetWithVotes(updatedBet);
+    return this.transformBetWithVotes(
+      updatedBet as unknown as BetEntity & {
+        odds: Array<OddsEntity & { _count: { votes: number } }>;
+        category?: { id: number; title: string };
+      },
+    );
   }
 
   async delete(where: { id: number }): Promise<BetWithOdds> {
