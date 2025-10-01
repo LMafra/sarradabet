@@ -16,6 +16,9 @@ const AdminLogin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const API_BASE_URL = (
+    (import.meta as any).env?.VITE_API_URL || "http://localhost:3001"
+  ).replace(/\/+$/, "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +26,7 @@ const AdminLogin: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:3001/api/v1/admin/login", {
+      const response = await fetch(`${API_BASE_URL}/api/v1/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

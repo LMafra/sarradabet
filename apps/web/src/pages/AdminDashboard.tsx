@@ -23,6 +23,9 @@ const AdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const API_BASE_URL = (
+    (import.meta as any).env?.VITE_API_URL || "http://localhost:3001"
+  ).replace(/\/+$/, "");
 
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
@@ -47,7 +50,7 @@ const AdminDashboard: React.FC = () => {
       const token = localStorage.getItem("adminToken");
 
       const profileResponse = await fetch(
-        "http://localhost:3001/api/v1/admin/profile",
+        `${API_BASE_URL}/api/v1/admin/profile`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

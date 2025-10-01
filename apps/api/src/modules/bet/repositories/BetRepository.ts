@@ -144,28 +144,38 @@ export class BetRepository extends BaseRepository<
   }
 
   async delete(where: { id: number }): Promise<BetWithOdds> {
-    // Ensure related odds are removed to satisfy FK constraints
-    await this.prisma.odd.deleteMany({ where: { betId: where.id } });
-    const deletedBet = await this.prisma.bet.delete({
-      where,
-      include: {
-        odds: {
-          include: {
-            _count: {
-              select: { votes: true },
+    // Capture the bet with its odds BEFORE deletion to return an accurate snapshot
+    return this.executeTransaction(async (tx) => {
+      const betBeforeDelete = await tx.bet.findUnique({
+        where,
+        include: {
+          odds: {
+            include: {
+              _count: {
+                select: { votes: true },
+              },
+            },
+          },
+          category: {
+            select: {
+              id: true,
+              title: true,
             },
           },
         },
-        category: {
-          select: {
-            id: true,
-            title: true,
-          },
-        },
-      },
-    });
+      });
 
-    return this.transformBetWithVotes(deletedBet);
+      // If not found, trigger the same error behavior as Prisma delete
+      if (!betBeforeDelete) {
+        await tx.bet.delete({ where });
+      }
+
+      // Ensure related odds are removed to satisfy FK constraints
+      await tx.odd.deleteMany({ where: { betId: where.id } });
+      await tx.bet.delete({ where });
+
+      return this.transformBetWithVotes(betBeforeDelete as Bet & { odds: Array<Odd & { _count: { votes: number } }>; category?: { id: number; title: string } });
+    });
   }
 
   async count(where?: Record<string, unknown>): Promise<number> {
