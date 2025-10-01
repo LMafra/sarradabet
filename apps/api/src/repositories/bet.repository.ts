@@ -26,9 +26,9 @@ export const getAllBetsFromRepository = async (
     },
   });
 
-  return bets.map((bet) => {
-    const totalVotes = bet.odds.reduce((sum, odd) => sum + odd._count.votes, 0);
-    const odds = bet.odds.map(({ _count, ...rest }) => ({
+  return bets.map((bet: any) => {
+    const totalVotes = bet.odds.reduce((sum: number, odd: any) => sum + odd._count.votes, 0);
+    const odds = bet.odds.map(({ _count, ...rest }: any) => ({
       ...rest,
       totalVotes: _count.votes,
     }));
@@ -41,14 +41,14 @@ export const getAllBetsFromRepository = async (
 };
 
 export const createBetWithOdds = async (data: CreateBetDTO) => {
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: PrismaClient) => {
     return tx.bet.create({
       data: {
         title: data.title,
         description: data.description,
         categoryId: data.categoryId,
         odds: {
-          create: data.odds.map((odd) => ({
+          create: data.odds.map((odd: any) => ({
             title: odd.title,
             value: odd.value,
           })),
@@ -75,8 +75,8 @@ export const getBetByIdFromRepository = async (betId: number) => {
 
   if (!bet) return null;
 
-  const totalVotes = bet.odds.reduce((sum, odd) => sum + odd._count.votes, 0);
-  const odds = bet.odds.map(({ _count, ...rest }) => ({
+  const totalVotes = bet.odds.reduce((sum: number, odd: any) => sum + odd._count.votes, 0);
+  const odds = bet.odds.map(({ _count, ...rest }: any) => ({
     ...rest,
     totalVotes: _count.votes,
   }));

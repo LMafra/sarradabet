@@ -1,9 +1,24 @@
-import { Odd, Bet, BetStatus } from "@prisma/client";
-import { CreateOddSchema } from "./odd.types";
+import { CreateOddSchema, OddEntity } from "./odd.types";
 import { z } from "zod";
 
-export type BetEntity = Bet;
-export type OddsEntity = Odd;
+export enum BetStatus {
+  open = "open",
+  closed = "closed",
+  resolved = "resolved",
+}
+
+export interface BetEntity {
+  id: number;
+  title: string;
+  description: string | null;
+  status: BetStatus;
+  categoryId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  resolvedAt: Date | null;
+}
+
+export type OddsEntity = OddEntity;
 
 export type BetResponse = BetEntity & {
   odds: (OddsEntity & { totalVotes: number })[];

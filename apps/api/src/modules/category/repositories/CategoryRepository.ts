@@ -1,4 +1,5 @@
-import { PrismaClient, Category } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import type { CategoryEntity } from "../../../types/category.types";
 import { BaseRepository } from "../../../core/base/BaseRepository";
 import { FindManyParams } from "../../../core/interfaces/IRepository";
 import {
@@ -6,7 +7,7 @@ import {
   UpdateCategoryInput,
 } from "../../../core/validation/ValidationSchemas";
 
-export type CategoryWithStats = Category & {
+export type CategoryWithStats = CategoryEntity & {
   _count: {
     bet: number;
   };

@@ -1,4 +1,5 @@
-import { PrismaClient, Bet, Odd } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import type { BetEntity, OddsEntity } from "../../../types/bet.types";
 import { BaseRepository } from "../../../core/base/BaseRepository";
 import { FindManyParams } from "../../../core/interfaces/IRepository";
 import {
@@ -6,8 +7,8 @@ import {
   UpdateBetInput,
 } from "../../../core/validation/ValidationSchemas";
 
-export type BetWithOdds = Bet & {
-  odds: (Odd & { totalVotes: number })[];
+export type BetWithOdds = BetEntity & {
+  odds: (OddsEntity & { totalVotes: number })[];
   totalVotes: number;
   category?: { id: number; title: string };
 };
@@ -105,7 +106,7 @@ export class BetRepository extends BaseRepository<
         },
       });
 
-      return this.transformBetWithVotes(bet);
+      return this.transformBetWithVotes(bet as unknown as BetEntity & { odds: Array<OddsEntity & { _count: { votes: number } }>; category?: { id: number; title: string } });
     });
   }
 
@@ -174,7 +175,7 @@ export class BetRepository extends BaseRepository<
       await tx.odd.deleteMany({ where: { betId: where.id } });
       await tx.bet.delete({ where });
 
-      return this.transformBetWithVotes(betBeforeDelete as Bet & { odds: Array<Odd & { _count: { votes: number } }>; category?: { id: number; title: string } });
+      return this.transformBetWithVotes(betBeforeDelete as unknown as BetEntity & { odds: Array<OddsEntity & { _count: { votes: number } }>; category?: { id: number; title: string } });
     });
   }
 
@@ -194,15 +195,15 @@ export class BetRepository extends BaseRepository<
     });
   }
 
-  private transformBetWithVotes(bet: Bet & { odds: Array<Odd & { _count: { votes: number } }>; category?: { id: number; title: string } }): BetWithOdds {
+  private transformBetWithVotes(bet: BetEntity & { odds: Array<OddsEntity & { _count: { votes: number } }>; category?: { id: number; title: string } }): BetWithOdds {
     const totalVotes = bet.odds.reduce(
-      (sum: number, odd: Odd & { _count: { votes: number } }) => sum + odd._count.votes,
+      (sum: number, odd: OddsEntity & { _count: { votes: number } }) => sum + odd._count.votes,
       0,
     );
 
     return {
       ...bet,
-      odds: bet.odds.map(({ _count, ...odd }: Odd & { _count: { votes: number } }) => ({
+      odds: bet.odds.map(({ _count, ...odd }: OddsEntity & { _count: { votes: number } }) => ({
         ...odd,
         totalVotes: _count.votes,
       })),

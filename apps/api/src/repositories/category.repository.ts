@@ -19,7 +19,7 @@ export const getAllCategoriesFromRepository = async (
 };
 
 export const createCategoryFromRepository = async (data: CreateCategoryDTO) => {
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: PrismaClient) => {
     return tx.category.create({
       data: {
         title: data.title,

@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError,
+} from "@prisma/client/runtime/library";
 import { logger } from "../../utils/logger";
 import { AppError, NotFoundError } from "../errors/AppError";
 
@@ -49,12 +53,12 @@ export const errorHandler = (
       message: err.message,
       code: err.code,
     }));
-  } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
+  } else if (error instanceof PrismaClientKnownRequestError) {
     const prismaError = handlePrismaError(error);
     statusCode = prismaError.statusCode;
     message = prismaError.message;
     errors = prismaError.errors;
-  } else if (error instanceof Prisma.PrismaClientValidationError) {
+  } else if (error instanceof PrismaClientValidationError) {
     statusCode = 400;
     message = "Invalid data provided";
     errors = [{ message: error.message }];
@@ -107,7 +111,7 @@ export const errorHandler = (
   }
 };
 
-const handlePrismaError = (error: Prisma.PrismaClientKnownRequestError) => {
+const handlePrismaError = (error: PrismaClientKnownRequestError) => {
   switch (error.code) {
     case "P2002":
       return {

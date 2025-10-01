@@ -1,7 +1,11 @@
-import { Category } from "@prisma/client";
 import { z } from "zod";
 
-export type CategoryEntity = Category;
+export interface CategoryEntity {
+  id: number;
+  title: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export type CategoryResponse = CategoryEntity & {
   bets?: number;

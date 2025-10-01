@@ -1,7 +1,10 @@
-import { Vote } from "@prisma/client";
 import { z } from "zod";
 
-export type VoteEntity = Vote;
+export interface VoteEntity {
+  id: number;
+  oddId: number;
+  createdAt: Date;
+}
 
 export type VoteResponse = VoteEntity & {
   odd?: number;
