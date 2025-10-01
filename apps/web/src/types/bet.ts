@@ -10,7 +10,10 @@ export type Bet = {
     totalVotes: number;
   }[];
   totalVotes?: number;
-  createdAt: string;
+  // Backend may send ISO string; UI formats with date-fns
+  createdAt: string | Date;
+  // Align with UI usage in BetCard
+  status?: "ACTIVE" | "RESOLVED" | "INACTIVE";
 };
 
 export type CreateBetDto = {

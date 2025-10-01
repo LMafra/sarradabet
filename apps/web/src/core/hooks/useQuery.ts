@@ -48,34 +48,37 @@ export function useQuery<T>(
 
   const refetch = useCallback(async (): Promise<T | null> => {
     // Check cache first
-    const cached = queryCache.get(queryKey);
+    const cached = queryCache.get<T>(queryKey);
     if (cached && !isStale) {
       return cached;
     }
 
     // Check if request is already pending
     if (queryCache.isPending(queryKey)) {
-      const pending = queryCache.get(queryKey);
-      if (pending?.promise) {
-        return await pending.promise;
+      const pending = queryCache.getPending<T>(queryKey);
+      if (pending) {
+        const result = await pending;
+        // After pending resolves, prefer cached data if available
+        const after = queryCache.get<T>(queryKey);
+        return after ?? result;
       }
     }
 
     // Make new request
     const promise = executeRef.current();
-    queryCache.setPending(queryKey, promise);
+    queryCache.setPending<T>(queryKey, promise);
 
     try {
       const result = await promise;
-      if (result !== null) {
+      if (result !== null && result !== undefined) {
         setLastFetched(new Date());
         setIsStale(false);
-        queryCache.set(queryKey, result);
+        queryCache.set<T>(queryKey, result);
       }
-      queryCache.clearPending(queryKey);
-      return result;
+      // pending is cleared by the cache itself; return cached if present
+      const final = queryCache.get<T>(queryKey);
+      return final ?? result;
     } catch (error) {
-      queryCache.clearPending(queryKey);
       throw error;
     }
   }, [queryKey, isStale]);

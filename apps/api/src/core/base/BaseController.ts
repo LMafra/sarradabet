@@ -68,14 +68,31 @@ export abstract class BaseController<T, CreateInput, UpdateInput>
     statusCode: number = 200,
     message?: string,
   ): void {
-    // Preserve existing shape when controller passes a fully shaped response
-    if (data && typeof data === "object" && (data as Record<string, unknown>).hasOwnProperty("success")) {
-      new ApiResponse(res).success(data as Record<string, unknown>, statusCode);
-      return;
+    // Always send a fully-shaped success payload with a consistent top-level structure
+    let payload: Record<string, unknown> = { success: true };
+
+    if (data && typeof data === "object" && !Array.isArray(data)) {
+      const input = data as Record<string, unknown>;
+      const looksLikePayload =
+        Object.prototype.hasOwnProperty.call(input, "data") ||
+        Object.prototype.hasOwnProperty.call(input, "meta") ||
+        Object.prototype.hasOwnProperty.call(input, "message") ||
+        Object.prototype.hasOwnProperty.call(input, "errors") ||
+        Object.prototype.hasOwnProperty.call(input, "success");
+
+      payload = looksLikePayload
+        ? { ...input, success: true }
+        : { success: true, data };
+
+      if (message !== undefined && !Object.prototype.hasOwnProperty.call(payload, "message")) {
+        payload.message = message;
+      }
+    } else {
+      payload = { success: true, data };
+      if (message !== undefined) payload.message = message;
     }
 
-    // Auto-wrap data with success and optional message
-    new ApiResponse(res).success({ success: true, data, message }, statusCode);
+    new ApiResponse(res).success(payload, statusCode);
   }
 
   protected sendError(

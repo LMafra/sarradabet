@@ -41,8 +41,8 @@ describe("useCategories", () => {
   describe("useCategories", () => {
     it("should fetch categories with pagination", async () => {
       const mockCategories = [
-        { id: 1, name: "Sports", description: "Sports betting" },
-        { id: 2, name: "Politics", description: "Political betting" },
+        { id: 1, title: "Sports" },
+        { id: 2, title: "Politics" },
       ];
 
       mockCategoryService.getCategoriesWithPagination.mockResolvedValue({
@@ -90,7 +90,7 @@ describe("useCategories", () => {
 
   describe("useCategory", () => {
     it("should fetch a single category", async () => {
-      const mockCategory = { id: 1, name: "Sports", description: "Sports betting" };
+      const mockCategory = { id: 1, title: "Sports" };
       mockCategoryService.getById.mockResolvedValue({
         success: true,
         data: { category: mockCategory },
@@ -118,7 +118,7 @@ describe("useCategories", () => {
   describe("useSearchCategories", () => {
     it("should search categories", async () => {
       const mockCategories = [
-        { id: 1, name: "Sports", description: "Sports betting" },
+        { id: 1, title: "Sports" },
       ];
       mockCategoryService.searchCategories.mockResolvedValue({
         success: true,
@@ -154,8 +154,7 @@ describe("useCategories", () => {
   describe("useCreateCategory", () => {
     it("should create a category successfully", async () => {
       const mockCategoryData = {
-        name: "New Category",
-        description: "New Description",
+        title: "New Category",
       };
 
       const mockCreatedCategory = { id: 1, ...mockCategoryData };
@@ -184,8 +183,7 @@ describe("useCategories", () => {
     it("should handle creation error", async () => {
       const errorMessage = "Failed to create category";
       const mockCategoryData = {
-        name: "New Category",
-        description: "New Description",
+        title: "New Category",
       };
 
       mockCategoryService.create.mockRejectedValue({
@@ -211,8 +209,7 @@ describe("useCategories", () => {
   describe("useUpdateCategory", () => {
     it("should update a category successfully", async () => {
       const mockUpdateData = {
-        name: "Updated Category",
-        description: "Updated Description",
+        title: "Updated Category",
       };
       const mockUpdatedCategory = { id: 1, ...mockUpdateData };
 

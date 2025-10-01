@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { ErrorMessage } from "../components/ui/ErrorMessage";
-import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 
 interface LoginForm {
   username: string;

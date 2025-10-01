@@ -10,12 +10,11 @@ const router = Router();
 router.use("/bets", betRoutes);
 router.use("/categories", categoryRoutes);
 router.use("/votes", voteRoutes);
-router.use("/admin", adminRoutes);
-router.use("/dev", devRoutes);
-
 router.get("/admin/test", (req, res) => {
   res.json({ message: "Admin routes are working!" });
 });
+router.use("/admin", adminRoutes);
+router.use("/dev", devRoutes);
 
 router.get("/", (req, res) => {
   res.json({
