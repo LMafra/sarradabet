@@ -79,7 +79,12 @@ export class BetRepository extends BaseRepository<
       },
     });
 
-    return bet ? this.transformBetWithVotes(bet) : null;
+    return bet ? this.transformBetWithVotes(
+      bet as unknown as BetEntity & {
+        odds: Array<OddsEntity & { _count: { votes: number } }>;
+        category?: { id: number; title: string };
+      },
+    ) : null;
   }
 
   async create(data: CreateBetInput): Promise<BetWithOdds> {
