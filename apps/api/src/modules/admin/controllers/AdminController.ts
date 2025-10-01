@@ -1,39 +1,51 @@
 import { Request, Response } from "express";
-import {
-  AdminService,
-  CreateAdminInput,
-  LoginInput,
-} from "../services/AdminService";
-import { BaseController } from "../../../core/base/BaseController";
+import { AdminService, CreateAdminInput, LoginInput } from "../services/AdminService";
 import { AuthPayload } from "../../../utils/auth";
+import { ApiResponse } from "../../../utils/api/response";
+import { AppError } from "../../../core/errors/AppError";
 
-export class AdminController extends BaseController<any, any, any> {
+export class AdminController {
   private adminService: AdminService;
 
   constructor() {
-    super({
-      // Minimal no-op implementation to satisfy abstract methods; not used by this controller
-      findAll: async () => ({ data: [], meta: { page: 1, limit: 10, total: 0, totalPages: 0, hasNext: false, hasPrev: false } }),
-      findById: async () => ({}),
-      create: async () => ({}),
-      update: async () => ({}),
-      delete: async () => {},
-      validateBusinessRules: async () => {},
-      executeBusinessLogic: async (d: any) => d,
-    } as any);
     this.adminService = new AdminService();
   }
 
-  // Unused in this controller but required by BaseController interface
-  async findAll(): Promise<void> { throw new Error("Not implemented"); }
-  async findById(): Promise<void> { throw new Error("Not implemented"); }
+  private sendSuccess(
+    res: Response,
+    data: unknown,
+    statusCode: number = 200,
+  ): void {
+    new ApiResponse(res).success(data as any, statusCode);
+  }
+
+  private sendError(
+    res: Response,
+    err: unknown,
+    fallbackStatusCode: number = 400,
+    errors?: Array<{ field?: string; message: string; code?: string }>,
+  ): void {
+    let message = "An error occurred";
+    let statusCode = fallbackStatusCode;
+
+    if (err instanceof AppError) {
+      message = err.message;
+      statusCode = err.statusCode;
+    } else if (err instanceof Error) {
+      message = err.message;
+    } else if (typeof err === "string") {
+      message = err;
+    }
+
+    new ApiResponse(res).error(message, errors, statusCode);
+  }
 
   create = async (req: Request, res: Response): Promise<void> => {
     try {
       const data: CreateAdminInput = req.body;
       const admin = await this.adminService.create(data);
 
-      this.sendSuccess(res, admin, 201, "Admin created successfully");
+      this.sendSuccess(res, admin, 201);
     } catch (error) {
       this.sendError(res, error);
     }
@@ -44,7 +56,7 @@ export class AdminController extends BaseController<any, any, any> {
       const data: LoginInput = req.body;
       const admin = await this.adminService.login(data);
 
-      this.sendSuccess(res, admin, 200, "Login successful");
+      this.sendSuccess(res, admin, 200);
     } catch (error) {
       this.sendError(res, error);
     }
@@ -88,7 +100,7 @@ export class AdminController extends BaseController<any, any, any> {
       const data = req.body;
       const admin = await this.adminService.update(id, data);
 
-      this.sendSuccess(res, admin, 200, "Admin updated successfully");
+      this.sendSuccess(res, admin, 200);
     } catch (error) {
       this.sendError(res, error);
     }

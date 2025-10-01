@@ -2,7 +2,7 @@ export type Bet = {
   id: number;
   title: string;
   description?: string;
-  categoryId?: number;
+  categoryId: number;
   odds: {
     id: number;
     title: string;
@@ -13,7 +13,7 @@ export type Bet = {
   // Backend may send ISO string; UI formats with date-fns
   createdAt: string | Date;
   // Align with UI usage in BetCard
-  status?: "ACTIVE" | "RESOLVED" | "INACTIVE";
+  status?: "open" | "closed" | "resolved";
 };
 
 export type CreateBetDto = {

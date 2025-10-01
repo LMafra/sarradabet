@@ -17,7 +17,7 @@ const BetCard = ({ bet, onVoteCreated }: BetCardProps) => {
     title: string;
   } | null>(null);
 
-  const formattedDate = format(bet.createdAt, "dd/MM/yyyy");
+  const formattedDate = format(new Date(bet.createdAt), "dd/MM/yyyy");
 
   useEffect(() => {
     setOddsData(bet.odds);
@@ -120,25 +120,25 @@ const BetCard = ({ bet, onVoteCreated }: BetCardProps) => {
         <div className="flex items-center gap-2">
           <div
             className={`w-2 h-2 rounded-full ${
-              bet.status === "ACTIVE"
+              bet.status === "open"
                 ? "bg-green-500"
-                : bet.status === "RESOLVED"
+                : bet.status === "resolved"
                   ? "bg-blue-500"
                   : "bg-gray-500"
             }`}
           ></div>
           <span
             className={`text-xs font-medium ${
-              bet.status === "ACTIVE"
+              bet.status === "open"
                 ? "text-green-400"
-                : bet.status === "RESOLVED"
+                : bet.status === "resolved"
                   ? "text-blue-400"
                   : "text-gray-400"
             }`}
           >
-            {bet.status === "ACTIVE"
+            {bet.status === "open"
               ? "Ativa"
-              : bet.status === "RESOLVED"
+              : bet.status === "resolved"
                 ? "Resolvida"
                 : "Inativa"}
           </span>

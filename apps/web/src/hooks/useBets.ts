@@ -12,10 +12,7 @@ export function useBets(params?: {
 }) {
   return useQuery(
     `bets-${JSON.stringify(params || {})}`,
-    async () => {
-      const response = await betService.getBetsWithPagination(params);
-      return { ...response, data: response.data };
-    },
+    () => betService.getBetsWithPagination(params),
     {
       staleTime: 2 * 60 * 1000, // 2 minutes - longer cache
       refetchOnMount: false, // Don't refetch on mount if data exists

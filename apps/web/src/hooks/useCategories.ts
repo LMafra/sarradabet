@@ -11,11 +11,7 @@ export function useCategories(params?: {
 }) {
   return useQuery(
     `categories-${JSON.stringify(params || {})}`,
-    async () => {
-      const response =
-        await categoryService.getCategoriesWithPagination(params);
-      return { ...response, data: response.data };
-    },
+    () => categoryService.getCategoriesWithPagination(params),
     {
       staleTime: 5 * 60 * 1000, // 5 minutes - longer cache for categories
       refetchOnMount: false, // Don't refetch on mount if data exists

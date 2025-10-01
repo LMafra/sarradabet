@@ -34,18 +34,26 @@ const AdminLogin: React.FC = () => {
       const raw = await response.json();
 
       if (!response.ok) {
-        throw new Error(raw.message || "Erro ao fazer login");
+        const message =
+          (raw && typeof raw === "object" && (raw.message as string)) ||
+          "Erro ao fazer login";
+        throw new Error(message);
       }
 
-      // Normalize possible API shapes
-      const payload =
-        raw && raw.data && raw.data.data
-          ? raw.data.data
-          : raw && raw.data
-            ? raw.data
-            : raw;
+      // Normalize possible API shapes using explicit key existence checks
+      const hasOwn = (obj: unknown, key: string) =>
+        !!obj && typeof obj === "object" && Object.prototype.hasOwnProperty.call(obj, key);
 
-      const tokenValue = payload?.token?.token || payload?.token;
+      let payload: any = raw;
+      if (hasOwn(raw, "data")) {
+        const first = (raw as any).data;
+        payload = hasOwn(first, "data") ? (first as any).data : first;
+      }
+
+      const tokenValue =
+        (payload && typeof payload === "object" && (payload as any).token && (payload as any).token.token)
+          ? (payload as any).token.token
+          : (payload as any)?.token;
       if (typeof tokenValue !== "string") {
         throw new Error("Token inválido na resposta da API");
       }

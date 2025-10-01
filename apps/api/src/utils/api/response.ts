@@ -23,7 +23,10 @@ export class ApiResponse {
       const maybeEnvelope = data as Record<string, unknown>;
       const hasOwn = (key: string) => Object.prototype.hasOwnProperty.call(maybeEnvelope, key);
       const hasSuccessKey = hasOwn("success") && typeof maybeEnvelope.success === "boolean";
-      const hasEnvelopeHints = hasOwn("data") || hasOwn("message") || hasOwn("errors");
+      const hasEnvelopeHints =
+        hasOwn("data") ||
+        (hasOwn("message") && typeof (maybeEnvelope as { message?: unknown }).message === "string") ||
+        (hasOwn("errors") && Array.isArray((maybeEnvelope as { errors?: unknown }).errors));
 
       if (hasSuccessKey && hasEnvelopeHints) {
         const shaped = maybeEnvelope as {
@@ -33,20 +36,21 @@ export class ApiResponse {
           data?: ApiResponseData;
         } & Record<string, unknown>;
 
-        // If the incoming payload indicates failure, emit an error response instead
+        // For success=false payloads coming into success(), convert to a proper error response
         if (shaped.success === false) {
-          const errorMessage = shaped.message || "Request failed";
-          const errorList = shaped.errors;
-          const errorStatus = statusCode >= 400 ? statusCode : 400;
-          this.error(errorMessage, errorList, errorStatus);
+          const message = typeof shaped.message === "string" ? shaped.message : "Request failed";
+          const errors = Array.isArray(shaped.errors) ? shaped.errors : undefined;
+          this.error(message, errors, statusCode);
           return;
         }
 
         // For success=true payloads, re-wrap consistently as { success: true, data }
-        const normalizedData = Object.prototype.hasOwnProperty.call(shaped, "data")
-          ? shaped.data
+        const hasDataKey = Object.prototype.hasOwnProperty.call(shaped, "data");
+        const normalizedData = hasDataKey
+          ? ((shaped.data ?? null) as ApiResponseData)
           : (() => {
-              const { success, message, errors, ...rest } = shaped;
+              // Keep all fields except the envelope discriminator 'success'
+              const { success, ...rest } = shaped as Record<string, unknown>;
               return Object.keys(rest).length ? (rest as unknown as ApiResponseData) : null;
             })();
 

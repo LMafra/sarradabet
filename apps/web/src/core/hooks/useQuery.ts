@@ -46,42 +46,58 @@ export function useQuery<T>(
     executeRef.current = api.execute;
   }, [api.execute]);
 
+  // Keep refs to avoid stale closures and stabilize refetch
+  const queryKeyRef = useRef(queryKey);
+  useEffect(() => {
+    queryKeyRef.current = queryKey;
+  }, [queryKey]);
+
+  const isStaleRef = useRef(isStale);
+  useEffect(() => {
+    isStaleRef.current = isStale;
+  }, [isStale]);
+
   const refetch = useCallback(async (): Promise<T | null> => {
+    const key = queryKeyRef.current;
+    const currentlyStale = isStaleRef.current;
+
     // Check cache first
-    const cached = queryCache.get<T>(queryKey);
-    if (cached && !isStale) {
+    const cached = queryCache.get<T>(key);
+    if (cached && !currentlyStale) {
       return cached;
     }
 
     // Check if request is already pending
-    if (queryCache.isPending(queryKey)) {
-      const pending = queryCache.getPending<T>(queryKey);
+    if (queryCache.isPending(key)) {
+      const pending = queryCache.getPending<T>(key);
       if (pending) {
         const result = await pending;
         // After pending resolves, prefer cached data if available
-        const after = queryCache.get<T>(queryKey);
+        const after = queryCache.get<T>(key);
         return after ?? result;
       }
     }
 
     // Make new request
     const promise = executeRef.current();
-    queryCache.setPending<T>(queryKey, promise);
+    queryCache.setPending<T>(key, promise);
 
     try {
       const result = await promise;
-      if (result !== null && result !== undefined) {
-        setLastFetched(new Date());
-        setIsStale(false);
-        queryCache.set<T>(queryKey, result);
-      }
+
+      // Always update last fetched and cache, even if result is null/undefined,
+      // to avoid returning stale data after a nullish resolution.
+      setLastFetched(new Date());
+      setIsStale(false);
+      queryCache.set<T | null>(key, (result as T | null) ?? null);
+
       // pending is cleared by the cache itself; return cached if present
-      const final = queryCache.get<T>(queryKey);
-      return final ?? result;
+      const final = queryCache.get<T | null>(key) as T | null;
+      return final;
     } catch (error) {
       throw error;
     }
-  }, [queryKey, isStale]);
+  }, []);
 
   // Initial fetch
   useEffect(() => {
@@ -90,9 +106,11 @@ export function useQuery<T>(
       (refetchOnMount || lastFetched === null) &&
       (isStale || lastFetched === null)
     ) {
+      // Call the latest refetch without creating an effect dependency loop
       refetch();
     }
-  }, [enabled, refetchOnMount, isStale, lastFetched, refetch]);
+    // Intentionally exclude `refetch` from deps to avoid circular updates.
+  }, [enabled, refetchOnMount, isStale, lastFetched]);
 
   // Window focus refetch
   useEffect(() => {

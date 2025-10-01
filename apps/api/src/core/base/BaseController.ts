@@ -3,7 +3,7 @@ import { IController } from "../interfaces/IController";
 import { ApiResponse } from "../../utils/api/response";
 import { IService } from "../interfaces/IService";
 import { PaginationParams } from "../interfaces/IRepository";
-import { AppError } from "../errors/AppError";
+import { AppError, BadRequestError } from "../errors/AppError";
 
 export abstract class BaseController<T, CreateInput, UpdateInput>
   implements IController
@@ -57,7 +57,7 @@ export abstract class BaseController<T, CreateInput, UpdateInput>
   protected parseId(req: Request): number {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id) || id <= 0) {
-      throw new Error("Invalid ID provided");
+      throw new BadRequestError("Invalid ID provided");
     }
     return id;
   }
@@ -68,31 +68,10 @@ export abstract class BaseController<T, CreateInput, UpdateInput>
     statusCode: number = 200,
     message?: string,
   ): void {
-    // Always send a fully-shaped success payload with a consistent top-level structure
-    let payload: Record<string, unknown> = { success: true };
-
-    if (data && typeof data === "object" && !Array.isArray(data)) {
-      const input = data as Record<string, unknown>;
-      const looksLikePayload =
-        Object.prototype.hasOwnProperty.call(input, "data") ||
-        Object.prototype.hasOwnProperty.call(input, "meta") ||
-        Object.prototype.hasOwnProperty.call(input, "message") ||
-        Object.prototype.hasOwnProperty.call(input, "errors") ||
-        Object.prototype.hasOwnProperty.call(input, "success");
-
-      payload = looksLikePayload
-        ? { ...input, success: true }
-        : { success: true, data };
-
-      if (message !== undefined && !Object.prototype.hasOwnProperty.call(payload, "message")) {
-        payload.message = message;
-      }
-    } else {
-      payload = { success: true, data };
-      if (message !== undefined) payload.message = message;
-    }
-
-    new ApiResponse(res).success(payload, statusCode);
+    // Delegate normalization to ApiResponse to avoid double-wrapping or shape drift
+    // Note: message is intentionally not forced into the envelope here to keep
+    // response shape consistent. Controllers that need a message should include it in `data`.
+    new ApiResponse(res).success(data as any, statusCode);
   }
 
   protected sendError(

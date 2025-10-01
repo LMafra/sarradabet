@@ -38,11 +38,11 @@ export const comparePassword = async (
  */
 export const generateToken = (payload: AuthPayload): AuthToken => {
   const options: SignOptions = {
-    expiresIn: JWT_EXPIRES_IN as unknown as number | undefined,
+    expiresIn: JWT_EXPIRES_IN as SignOptions["expiresIn"],
     issuer: "sarradabet-api",
     audience: "sarradabet-admin",
   };
-  const token = jwt.sign(payload as any, JWT_SECRET as unknown as jwt.Secret, options);
+  const token = jwt.sign(payload, JWT_SECRET, options);
 
   return {
     token,
