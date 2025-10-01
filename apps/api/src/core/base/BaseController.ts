@@ -69,7 +69,11 @@ export abstract class BaseController<T, CreateInput, UpdateInput>
     message?: string,
   ): void {
     // Include message in the response data if provided
-    const responseData = message ? { ...data, message } : data;
+    const responseData = message
+      ? (typeof data === "object" && data !== null && !Array.isArray(data)
+          ? { ...(data as Record<string, unknown>), message }
+          : { data, message })
+      : data;
     new ApiResponse(res).success(responseData as any, statusCode);
   }
 
