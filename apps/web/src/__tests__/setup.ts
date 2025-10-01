@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import { TextEncoder, TextDecoder } from "util";
 import { vi } from "vitest";
 
 // Mock environment variables
@@ -9,7 +10,17 @@ Object.defineProperty(import.meta, "env", {
 });
 
 // Mock fetch globally
-global.fetch = vi.fn();
+if (!(global as any).fetch) {
+  (global as any).fetch = vi.fn();
+}
+
+// Polyfill TextEncoder/TextDecoder for libs expecting Node encoders
+if (!(global as any).TextEncoder) {
+  (global as any).TextEncoder = TextEncoder as unknown as typeof globalThis.TextEncoder;
+}
+if (!(global as any).TextDecoder) {
+  (global as any).TextDecoder = TextDecoder as unknown as typeof globalThis.TextDecoder;
+}
 
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {
