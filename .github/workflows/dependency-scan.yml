@@ -1,0 +1,54 @@
+name: dependency-scan
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: ["main", "github-ci"]
+
+jobs:
+  audit:
+    name: Dependency Audit (Node 20)
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install root deps (npm ci)
+        run: npm ci
+
+      - name: Audit root
+        run: |
+          npm audit --audit-level=moderate --json > audit-root.json
+          cat audit-root.json | jq '.metadata.vulnerabilities'
+
+      - name: Audit apps/web
+        working-directory: apps/web
+        run: |
+          npm ci
+          npm audit --audit-level=moderate --json > ../..//audit-web.json
+          cat ../..//audit-web.json | jq '.metadata.vulnerabilities'
+
+      - name: Audit apps/api
+        working-directory: apps/api
+        run: |
+          npm ci
+          npm audit --audit-level=moderate --json > ../..//audit-api.json
+          cat ../..//audit-api.json | jq '.metadata.vulnerabilities'
+
+      - name: Upload audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-reports
+          path: |
+            audit-root.json
+            audit-web.json
+            audit-api.json
+
