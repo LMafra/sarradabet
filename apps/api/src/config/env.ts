@@ -12,7 +12,7 @@ const envSchema = z.object({
   DATABASE_URL: z
     .string()
     .regex(/^postgresql:\/\/.+/)
-    .default("postgresql://appuser:sarradabet1234@localhost:5432/sarradabet_test"),
+    .default("postgresql://postgres:postgres@localhost:5432/sarradabet_test"),
   API_KEY: z.string().optional(),
   JWT_SECRET: z.string().optional(),
 });

@@ -6,7 +6,7 @@ beforeAll(async () => {
   process.env.NODE_ENV = process.env.NODE_ENV || "test";
   process.env.DATABASE_URL =
     process.env.DATABASE_URL ||
-    "postgresql://appuser:sarradabet1234@localhost:5432/sarradabet_test";
+    "postgresql://postgres:postgres@localhost:5432/sarradabet_test";
   process.env.CORS_ORIGINS = process.env.CORS_ORIGINS || "http://localhost:5173";
   process.env.PORT = process.env.PORT || "0";
 
@@ -17,7 +17,7 @@ beforeAll(async () => {
       db: {
         url:
           process.env.DATABASE_URL ||
-          "postgresql://appuser:sarradabet1234@localhost:5432/sarradabet_test",
+          "postgresql://postgres:postgres@localhost:5432/sarradabet_test",
       },
     },
   });
