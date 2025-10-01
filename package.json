@@ -7,16 +7,30 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "prisma:generate": "cd apps/api && npx prisma generate",
-    "prisma:migrate:dev": "cd apps/api && npx prisma migrate dev --name",
-    "prisma:migrate:deploy": "cd apps/api && npx prisma migrate deploy",
-    "prisma:studio": "cd apps/api && npx prisma studio",
-    "prisma:check": "cd apps/api && npx prisma migrate status"
+    "prisma:generate": "npm run -w apps/api prisma:generate",
+    "prisma:migrate:dev": "npm run -w apps/api prisma:migrate:dev --",
+    "prisma:migrate:deploy": "npm run -w apps/api prisma:migrate:deploy",
+    "prisma:studio": "npm run -w apps/api prisma:studio",
+    "prisma:check": "npm run -w apps/api prisma:check",
+    "db:seed": "npm run -w apps/api db:seed",
+    "db:seed:simple": "npm run -w apps/api db:seed:simple",
+    "db:reset": "npm run -w apps/api db:reset",
+    "test": "turbo run test",
+    "test:api": "npm run -w apps/api test",
+    "test:api:watch": "npm run -w apps/api test:watch",
+    "test:api:coverage": "npm run -w apps/api test:coverage",
+    "test:api:unit": "npm run -w apps/api test:unit",
+    "test:api:integration": "npm run -w apps/api test:integration",
+    "test:web": "npm run -w apps/web test",
+    "test:web:watch": "npm run -w apps/web test:watch",
+    "test:web:coverage": "npm run -w apps/web test:coverage"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
     "turbo": "^2.4.4",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "vitest": "^3.2.4",
+    "jest": "^30.2.0"
   },
   "engines": {
     "node": ">=18"

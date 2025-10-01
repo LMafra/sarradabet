@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import React, { useState, useEffect } from "react";
+import { useCreateBet, useCategories } from "../hooks";
 import { Bet, CreateBetDto } from "../types/bet";
-import betService from "../services/betService";
 import { Category } from "../types/category";
-import categoryService from "../services/categoryService";
+import Modal from "./ui/Modal";
+import { Button } from "./ui/Button";
+import { ErrorMessage } from "./ui/ErrorMessage";
+import { LoadingSpinner } from "./ui/LoadingSpinner";
 
 interface CreateBetModalProps {
   isOpen: boolean;
@@ -11,79 +13,114 @@ interface CreateBetModalProps {
   onBetCreated: (newBet: Bet) => void;
 }
 
-const CreateBetModal = ({
+const CreateBetModal: React.FC<CreateBetModalProps> = ({
   isOpen,
   onClose,
   onBetCreated,
-}: CreateBetModalProps) => {
-  const [formData, setFormData] = useState<CreateBetDto>({
+}) => {
+  const [formData, setFormData] = useState<Partial<CreateBetDto>>({
     title: "",
     description: "",
     categoryId: undefined,
     odds: [{ title: "", value: 1 }],
   });
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
+  const { data: categoriesResponse, loading: categoriesLoading } =
+    useCategories();
+  const categories = categoriesResponse ?? [];
+  const createBetMutation = useCreateBet();
 
   useEffect(() => {
     if (isOpen) {
-      fetchCategories();
-    }
-  }, [isOpen]);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await categoryService.getAll();
-      setCategories(response.data);
-    } catch (err) {
-      console.error("Erro ao buscar categorias:", err);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (
-      !formData.title.trim() ||
-      formData.odds.some((odd) => !odd.title.trim())
-    ) {
-      setError("É necessário criar apostas com valores");
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-      const response = await betService.create({
-        ...formData,
-        categoryId: Number(formData.categoryId),
-      });
-
-      const newBet = response.data;
-      onBetCreated(newBet);
-      onClose();
-
       setFormData({
         title: "",
         description: "",
         categoryId: undefined,
         odds: [{ title: "", value: 1 }],
       });
-    } catch (err) {
-      const error =
-        err instanceof Error ? err : new Error("Ocorreu um erro inesperado.");
-      setError(error.message);
-    } finally {
-      setIsSubmitting(false);
+      setValidationErrors([]);
+    }
+  }, [isOpen]);
+
+  const validateForm = (): boolean => {
+    const errors: string[] = [];
+
+    if (!formData.title?.trim()) {
+      errors.push("Título é obrigatório");
+    }
+
+    if (formData.title && formData.title.length < 2) {
+      errors.push("Título deve ter pelo menos 2 caracteres");
+    }
+
+    if (formData.title && formData.title.length > 255) {
+      errors.push("Título deve ter menos de 255 caracteres");
+    }
+
+    if (!formData.categoryId) {
+      errors.push("Categoria é obrigatória");
+    }
+
+    if (!formData.odds || formData.odds.length === 0) {
+      errors.push("Pelo menos uma odd é obrigatória");
+    }
+
+    formData.odds?.forEach((odd, index) => {
+      if (!odd.title.trim()) {
+        errors.push(`Título da odd ${index + 1} é obrigatório`);
+      }
+      if (odd.value <= 1) {
+        errors.push(`Valor da odd ${index + 1} deve ser maior que 1`);
+      }
+      if (odd.value > 1000) {
+        errors.push(`Valor da odd ${index + 1} deve ser menor que 1000`);
+      }
+    });
+
+    setValidationErrors(errors);
+    return errors.length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      const betData = {
+        ...formData,
+        categoryId: Number(formData.categoryId),
+      } as CreateBetDto;
+
+      const result = await createBetMutation.mutateAsync(betData);
+
+      if (result) {
+        onBetCreated(result);
+        onClose();
+      }
+    } catch (error) {
+      console.error("Failed to create bet:", error);
     }
   };
 
   const addOdd = () => {
     setFormData((prev) => ({
       ...prev,
-      odds: [...prev.odds, { title: "", value: 1 }],
+      odds: [...(prev.odds || []), { title: "", value: 1 }],
     }));
+  };
+
+  const removeOdd = (index: number) => {
+    if (formData.odds && formData.odds.length > 1) {
+      setFormData((prev) => ({
+        ...prev,
+        odds: (prev.odds || []).filter((_, i) => i !== index),
+      }));
+    }
   };
 
   const updateOdd = (
@@ -93,151 +130,186 @@ const CreateBetModal = ({
   ) => {
     setFormData((prev) => ({
       ...prev,
-      odds: prev.odds.map((odd, i) =>
+      odds: (prev.odds || []).map((odd, i) =>
         i === index ? { ...odd, [field]: value } : odd,
       ),
     }));
   };
 
-  const removeOdd = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      odds: prev.odds.filter((_, i) => i !== index),
-    }));
-  };
-
   return (
-    <Dialog
-      open={isOpen}
+    <Modal
+      isOpen={isOpen}
       onClose={onClose}
-      className="fixed inset-0 z-50 overflow-y-auto"
+      title="Criar Nova Aposta"
+      size="lg"
     >
-      <div className="flex items-center justify-center min-h-screen bg-black/50">
-        <DialogPanel className="bg-gray-900 rounded-lg p-6 w-full max-w-2xl mx-4 border border-purple-500/30">
-          <DialogTitle className="text-2xl font-bold text-yellow-400 mb-4">
-            Nova Aposta
-          </DialogTitle>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Title */}
+        <div>
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
+            Título *
+          </label>
+          <input
+            id="title"
+            type="text"
+            value={formData.title}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, title: e.target.value }))
+            }
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+            placeholder="Digite o título da aposta"
+            maxLength={255}
+          />
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-gray-300 mb-2">Título</label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, title: e.target.value }))
-                }
-                className="w-full bg-gray-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-yellow-400"
-              />
-            </div>
+        {/* Description */}
+        <div>
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
+            Descrição
+          </label>
+          <textarea
+            id="description"
+            value={formData.description || ""}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, description: e.target.value }))
+            }
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+            placeholder="Digite a descrição da aposta (opcional)"
+            rows={3}
+            maxLength={1000}
+          />
+        </div>
 
-            <div>
-              <label className="block text-gray-300 mb-2">
-                Descrição (opcional)
-              </label>
-              <textarea
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-                className="w-full bg-gray-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-yellow-400"
-              />
-            </div>
+        {/* Category */}
+        <div>
+          <label
+            htmlFor="category"
+            className="block text-sm font-medium text-gray-300 mb-2"
+          >
+            Categoria *
+          </label>
+          {categoriesLoading ? (
+            <LoadingSpinner size="sm" />
+          ) : (
+            <select
+              id="category"
+              value={formData.categoryId || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  categoryId: e.target.value
+                    ? Number(e.target.value)
+                    : undefined,
+                }))
+              }
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+            >
+              <option value="">Selecione uma categoria</option>
+              {categories.map((category: Category) => (
+                <option key={category.id} value={category.id}>
+                  {category.title}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
 
-            <div>
-              <label className="block text-gray-300 mb-2">
-                Categoria (opcional)
-              </label>
-              <select
-                value={formData.categoryId}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setFormData((prev) => ({
-                    ...prev,
-                    categoryId: value ? Number(value) : undefined,
-                  }))
-                }}
-                className="w-full bg-gray-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-yellow-400"
-              >
-                <option value="">Selecione uma categoria</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.title}
-                  </option>
-                ))}
-              </select>
-            </div>
+        {/* Odds */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-sm font-medium text-gray-300">
+              Odds *
+            </label>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={addOdd}
+            >
+              Adicionar Odd
+            </Button>
+          </div>
 
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-300">Opções</h3>
-                <button
-                  type="button"
-                  onClick={addOdd}
-                  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-500 transition-colors"
-                >
-                  Adicionar Opção
-                </button>
-              </div>
-
-              {formData.odds.map((odd, index) => (
-                <div key={index} className="flex gap-4 items-center">
+          <div className="space-y-3">
+            {formData.odds?.map((odd, index) => (
+              <div key={index} className="flex gap-3 items-end">
+                <div className="flex-1">
                   <input
                     type="text"
-                    placeholder="Título da opção"
                     value={odd.title}
                     onChange={(e) => updateOdd(index, "title", e.target.value)}
-                    className="flex-1 bg-gray-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-yellow-400"
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                    placeholder="Título da odd"
                   />
+                </div>
+                <div className="w-24">
                   <input
                     type="number"
-                    placeholder="Odd"
                     value={odd.value}
                     onChange={(e) =>
                       updateOdd(index, "value", Number(e.target.value))
                     }
-                    min="1"
-                    step="0.1"
-                    className="w-24 bg-gray-800 rounded-lg p-3 text-white focus:ring-2 focus:ring-yellow-400"
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                    placeholder="Valor"
+                    min="1.01"
+                    max="1000"
+                    step="0.01"
                   />
-                  {formData.odds.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeOdd(index)}
-                      className="text-red-500 hover:text-red-400"
-                    >
-                      Remover
-                    </button>
-                  )}
                 </div>
-              ))}
-            </div>
+                {formData.odds && formData.odds.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="danger"
+                    size="sm"
+                    onClick={() => removeOdd(index)}
+                  >
+                    Remover
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
 
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+        {/* Validation Errors */}
+        {validationErrors.length > 0 && (
+          <ErrorMessage error={validationErrors} title="Erros de Validação" />
+        )}
 
-            <div className="flex justify-end gap-4 mt-6">
-              <button
-                type="button"
-                onClick={onClose}
-                className="bg-gray-700 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-yellow-400 text-black px-6 py-2 rounded-lg hover:bg-yellow-300 transition-colors disabled:opacity-50"
-              >
-                {isSubmitting ? "Criando..." : "Criar Aposta"}
-              </button>
-            </div>
-          </form>
-        </DialogPanel>
-      </div>
-    </Dialog>
+        {/* API Error */}
+        {createBetMutation.error && (
+          <ErrorMessage
+            error={createBetMutation.error}
+            title="Falha ao criar aposta"
+          />
+        )}
+
+        {/* Submit Button */}
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onClose}
+            disabled={createBetMutation.loading}
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            loading={createBetMutation.loading}
+            disabled={createBetMutation.loading}
+          >
+            Criar Aposta
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 };
 
