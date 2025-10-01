@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodSchema, ZodError } from "zod";
 import { ValidationError } from "../errors/AppError";
+import { logger } from "../../utils/logger";
 
 export const validateRequest = (
   schema: ZodSchema,
@@ -8,10 +9,7 @@ export const validateRequest = (
 ) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
-      console.log(
-        `🔍 Validation middleware called for ${property}:`,
-        req[property],
-      );
+      logger.debug(`Validation started for ${property}`);
 
       const result = schema.safeParse(req[property]);
 
@@ -22,20 +20,20 @@ export const validateRequest = (
           code: err.code,
         }));
 
-        console.error("❌ Validation failed:", {
-          property,
-          data: req[property],
-          errors: result.error.errors,
-        });
+        const fields = errors.map((e) => e.field).join(", ");
+        logger.warn(
+          `Validation failed for ${property}. Errors: ${errors.length}. Fields: ${fields}`,
+        );
 
         throw new ValidationError("Validation failed", { errors });
       }
 
-      console.log("✅ Validation passed for", property);
+      logger.debug(`Validation passed for ${property}`);
       req[property] = result.data;
       next();
     } catch (error) {
-      console.error("💥 Validation middleware error:", error);
+      const message = error instanceof Error ? error.message : String(error);
+      logger.error(`Validation middleware error: ${message}`);
       next(error);
     }
   };

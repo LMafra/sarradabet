@@ -8,7 +8,7 @@ import {
   CreateAdminSchema,
   LoginSchema,
   UpdateAdminSchema,
-  IdSchema,
+  ParamIdSchema,
 } from "../../../core/validation/ValidationSchemas";
 import { authenticateAdmin } from "../../../core/middleware/AuthMiddleware";
 
@@ -27,20 +27,20 @@ router.post("/", validateBody(CreateAdminSchema), adminController.create);
 
 router.get(
   "/:id",
-  validateParams(IdSchema.transform((val) => ({ id: val }))),
+  validateParams(ParamIdSchema),
   adminController.getById,
 );
 
 router.put(
   "/:id",
-  validateParams(IdSchema.transform((val) => ({ id: val }))),
+  validateParams(ParamIdSchema),
   validateBody(UpdateAdminSchema),
   adminController.update,
 );
 
 router.delete(
   "/:id",
-  validateParams(IdSchema.transform((val) => ({ id: val }))),
+  validateParams(ParamIdSchema),
   adminController.delete,
 );
 
