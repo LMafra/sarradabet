@@ -66,6 +66,15 @@ To use these workflows, you need to set up the following secrets in your reposit
 
 ### For CI/Testing
 - No additional secrets required for basic CI functionality
+- The `GITHUB_TOKEN` is automatically provided by GitHub Actions
+
+### Permissions
+The workflows are configured with the following permissions:
+- **CI workflow**: `contents: read`, `pull-requests: read`, `issues: read`
+- **PR workflow**: `contents: read`, `pull-requests: write`, `issues: write`
+- **Security workflow**: `contents: read`, `security-events: write`, `actions: read`
+- **Deploy workflow**: `contents: read` (additional permissions may be needed based on deployment target)
+- **Release workflow**: `contents: read` (additional permissions may be needed for releases)
 
 ### For Deployment
 - `DATABASE_URL`: PostgreSQL connection string for production

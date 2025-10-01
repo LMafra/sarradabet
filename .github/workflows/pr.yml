@@ -4,6 +4,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 env:
   NODE_VERSION: '18'
 
@@ -18,22 +23,27 @@ jobs:
       - name: Check PR size
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { data: files } = await github.rest.pulls.listFiles({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-            });
-            
-            const changedLines = files.reduce((acc, file) => acc + file.changes, 0);
-            
-            if (changedLines > 1000) {
-              github.rest.issues.createComment({
+            try {
+              const { data: files } = await github.rest.pulls.listFiles({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: `⚠️ **Large PR Warning**\n\nThis PR has ${changedLines} changed lines. Consider breaking it into smaller, more manageable PRs for easier review.`
+                pull_number: context.issue.number,
               });
+              
+              const changedLines = files.reduce((acc, file) => acc + file.changes, 0);
+              
+              if (changedLines > 1000) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: `⚠️ **Large PR Warning**\n\nThis PR has ${changedLines} changed lines. Consider breaking it into smaller, more manageable PRs for easier review.`
+                });
+              }
+            } catch (error) {
+              console.log('Error checking PR size:', error.message);
             }
 
   # Run tests on PR
@@ -91,19 +101,24 @@ jobs:
         if: always()
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const testResult = '${{ job.status }}';
-            const emoji = testResult === 'success' ? '✅' : '❌';
-            const message = testResult === 'success' 
-              ? 'All tests passed!' 
-              : 'Some tests failed. Please check the logs.';
-            
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: `${emoji} **Test Results**: ${message}`
-            });
+            try {
+              const testResult = '${{ job.status }}';
+              const emoji = testResult === 'success' ? '✅' : '❌';
+              const message = testResult === 'success' 
+                ? 'All tests passed!' 
+                : 'Some tests failed. Please check the logs.';
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `${emoji} **Test Results**: ${message}`
+              });
+            } catch (error) {
+              console.log('Error commenting test results:', error.message);
+            }
 
   # Build check
   build-check:
@@ -132,16 +147,21 @@ jobs:
         if: always()
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const buildResult = '${{ job.status }}';
-            const emoji = buildResult === 'success' ? '✅' : '❌';
-            const message = buildResult === 'success' 
-              ? 'Build successful!' 
-              : 'Build failed. Please check the logs.';
-            
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: `${emoji} **Build Results**: ${message}`
-            });
+            try {
+              const buildResult = '${{ job.status }}';
+              const emoji = buildResult === 'success' ? '✅' : '❌';
+              const message = buildResult === 'success' 
+                ? 'Build successful!' 
+                : 'Build failed. Please check the logs.';
+              
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `${emoji} **Build Results**: ${message}`
+              });
+            } catch (error) {
+              console.log('Error commenting build results:', error.message);
+            }
