@@ -58,9 +58,7 @@ export class CategoryService extends BaseService<
     }
 
     const category = await this.categoryRepository.create(data);
-    return this.executeBusinessLogic
-      ? await this.executeBusinessLogic(category)
-      : category;
+    return await this.executeBusinessLogic(category);
   }
 
   async update(
@@ -85,9 +83,7 @@ export class CategoryService extends BaseService<
     }
 
     const updatedCategory = await this.categoryRepository.update({ id }, data);
-    return this.executeBusinessLogic
-      ? await this.executeBusinessLogic(updatedCategory)
-      : updatedCategory;
+    return await this.executeBusinessLogic(updatedCategory);
   }
 
   async delete(id: number): Promise<void> {
