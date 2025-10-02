@@ -44,8 +44,10 @@ export class ApiResponse {
           return;
         }
 
-        // For success=true payloads, re-wrap consistently as { success: true, data }
+        // For success=true payloads, re-wrap consistently as { success: true, data, message? }
         const hasDataKey = Object.prototype.hasOwnProperty.call(shaped, "data");
+        const topLevelMessage =
+          typeof shaped.message === "string" ? (shaped.message as string) : undefined;
         const normalizedData = hasDataKey
           ? ((shaped.data ?? null) as ApiResponseData)
           : (() => {
@@ -54,7 +56,27 @@ export class ApiResponse {
               return Object.keys(rest).length ? (rest as unknown as ApiResponseData) : null;
             })();
 
-        this.res.status(statusCode).json({ success: true, data: normalizedData });
+        const body: Record<string, unknown> = { success: true, data: normalizedData };
+        if (topLevelMessage) body.message = topLevelMessage;
+        this.res.status(statusCode).json(body);
+        return;
+      }
+    }
+
+    // If caller provided an object with a top-level message (but no explicit envelope),
+    // hoist it to the top-level response and keep the remainder as data.
+    if (data && typeof data === "object" && !Array.isArray(data)) {
+      const obj = data as Record<string, unknown>;
+      const hasMessage = typeof obj.message === "string";
+      const hasSuccessKey = Object.prototype.hasOwnProperty.call(obj, "success");
+      if (hasMessage && !hasSuccessKey) {
+        const { message, ...rest } = obj as { message: string } & Record<string, unknown>;
+        const restIsEmpty = Object.keys(rest).length === 0;
+        this.res.status(statusCode).json({
+          success: true,
+          data: restIsEmpty ? null : (rest as unknown as ApiResponseData),
+          message,
+        });
         return;
       }
     }

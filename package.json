@@ -33,11 +33,23 @@
     "jest": "^30.2.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "packageManager": "npm@10.9.0",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "overrides": {
+    "on-headers": ">=1.1.0",
+    "@eslint/plugin-kit": ">=0.3.4",
+    "minimatch": "^3.1.2",
+    "test-exclude": {
+      "minimatch": "^3.1.2"
+    },
+    "@vitest/coverage-v8": {
+      "test-exclude": "^6.0.0",
+      "minimatch": "^3.1.2"
+    }
+  }
 }

@@ -7,9 +7,9 @@ export const createBet = async (data: CreateBetDTO) => {
 
 export const getAllBetsVotes = async () => {
   const bets = await betRepository.findAllWithVotes();
-  return bets.map((bet) => ({
+  return bets.map((bet: any) => ({
     ...bet,
-    odds: bet.odds.map((odd) => ({
+    odds: bet.odds.map((odd: any) => ({
       ...odd,
       totalVotes: odd._count.votes,
     })),
@@ -22,7 +22,7 @@ export const getBetById = async (betId: number) => {
 
   return {
     ...bet,
-    odds: bet.odds.map((odd) => ({
+    odds: bet.odds.map((odd: any) => ({
       ...odd,
       totalVotes: odd._count.votes,
     })),

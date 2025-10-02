@@ -1,6 +1,7 @@
 import { Factory } from "fishery";
 import { faker } from "@faker-js/faker";
-import { BetStatus, OddResult } from "@prisma/client";
+import { BetStatus } from "../../types/bet.types";
+import { OddResult } from "../../types/odd.types";
 
 export type CategoryAttrs = {
   id?: number;
@@ -52,7 +53,7 @@ export const betWithOddsFactory = Factory.define<BetWithOddsAttrs>(
       id: sequence,
       title: faker.commerce.productName(),
       description: faker.commerce.productDescription(),
-      status: "open",
+      status: BetStatus.open,
       categoryId,
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),

@@ -1,7 +1,20 @@
-import { Odd, OddResult } from "@prisma/client";
 import { z } from "zod";
 
-export type OddEntity = Odd;
+export enum OddResult {
+  pending = "pending",
+  won = "won",
+  lost = "lost",
+}
+
+export interface OddEntity {
+  id: number;
+  title: string;
+  value: number;
+  betId: number;
+  result: OddResult;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export type OddResponse = OddEntity & {
   totalVotes?: number;

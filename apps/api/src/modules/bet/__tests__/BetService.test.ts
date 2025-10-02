@@ -3,6 +3,7 @@ import { BetRepository } from "../repositories/BetRepository";
 import { PrismaClient } from "@prisma/client";
 import { NotFoundError, ConflictError, BadRequestError } from "../../../core/errors/AppError";
 import { betWithOddsFactory } from "../../../__tests__/factories";
+import { BetStatus } from "../../../types/bet.types";
 
 // Mock the repository
 jest.mock("../repositories/BetRepository");
@@ -194,8 +195,8 @@ describe("BetService", () => {
 
   describe("closeBet", () => {
     it("should close bet successfully", async () => {
-      const mockBet: any = betWithOddsFactory.build({ id: 1, status: "open" });
-      const mockClosedBet: any = { ...mockBet, status: "closed" };
+      const mockBet: any = betWithOddsFactory.build({ id: 1, status: BetStatus.open });
+      const mockClosedBet: any = { ...mockBet, status: BetStatus.closed };
 
       mockRepository.findUnique.mockResolvedValue(mockBet as any);
       mockRepository.update.mockResolvedValue(mockClosedBet as any);
@@ -205,12 +206,12 @@ describe("BetService", () => {
       expect(result).toBe(mockClosedBet);
       expect(mockRepository.update).toHaveBeenCalledWith(
         { id: 1 },
-        { status: "closed" },
+        { status: BetStatus.closed },
       );
     });
 
     it("should throw ConflictError when bet is not open", async () => {
-      const mockBet: any = betWithOddsFactory.build({ id: 1, status: "closed" });
+      const mockBet: any = betWithOddsFactory.build({ id: 1, status: BetStatus.closed });
       mockRepository.findUnique.mockResolvedValue(mockBet as any);
 
       await expect(betService.closeBet(1)).rejects.toThrow(ConflictError);
@@ -222,12 +223,12 @@ describe("BetService", () => {
 
   describe("resolveBet", () => {
     it("should resolve bet successfully", async () => {
-      const mockBet: any = betWithOddsFactory.build({ id: 1, status: "open", odds: [
+      const mockBet: any = betWithOddsFactory.build({ id: 1, status: BetStatus.open, odds: [
         { id: 1, title: "Option 1", value: 2.0 },
         { id: 2, title: "Option 2", value: 3.0 },
       ] });
 
-      const mockResolvedBet: any = { ...mockBet, status: "resolved" };
+      const mockResolvedBet: any = { ...mockBet, status: BetStatus.resolved };
       mockRepository.findUnique.mockResolvedValue(mockBet as any);
       mockRepository.executeTransaction.mockResolvedValue(undefined);
       mockRepository.findUnique
@@ -241,7 +242,7 @@ describe("BetService", () => {
     });
 
     it("should throw ConflictError when bet is already resolved", async () => {
-      const mockBet: any = betWithOddsFactory.build({ id: 1, status: "resolved", odds: [{ id: 1, title: "Option 1", value: 2.0 }] });
+      const mockBet: any = betWithOddsFactory.build({ id: 1, status: BetStatus.resolved, odds: [{ id: 1, title: "Option 1", value: 2.0 }] });
       mockRepository.findUnique.mockResolvedValue(mockBet as any);
 
       await expect(betService.resolveBet(1, 1)).rejects.toThrow(ConflictError);

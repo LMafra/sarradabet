@@ -68,10 +68,13 @@ export abstract class BaseController<T, CreateInput, UpdateInput>
     statusCode: number = 200,
     message?: string,
   ): void {
-    // Delegate normalization to ApiResponse to avoid double-wrapping or shape drift
-    // Note: message is intentionally not forced into the envelope here to keep
-    // response shape consistent. Controllers that need a message should include it in `data`.
-    new ApiResponse(res).success(data as any, statusCode);
+    // Include message in the response data if provided
+    const responseData = message
+      ? (typeof data === "object" && data !== null && !Array.isArray(data)
+          ? { ...(data as Record<string, unknown>), message }
+          : { data, message })
+      : data;
+    new ApiResponse(res).success(responseData as any, statusCode);
   }
 
   protected sendError(
