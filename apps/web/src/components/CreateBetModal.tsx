@@ -27,7 +27,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
 
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  const { data: categoriesResponse, loading: categoriesLoading } =
+  const { data: categoriesResponse, loading: categoriesLoading, error: categoriesError } =
     useCategories();
   const categories = categoriesResponse ?? [];
   const createBetMutation = useCreateBet();
@@ -196,6 +196,10 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
           </label>
           {categoriesLoading ? (
             <LoadingSpinner size="sm" />
+          ) : categoriesError ? (
+            <div className="text-red-400 text-sm">
+              Erro ao carregar categorias: {categoriesError}
+            </div>
           ) : (
             <select
               id="category"
@@ -211,7 +215,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
               className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
             >
               <option value="">Selecione uma categoria</option>
-              {categories.map((category: Category) => (
+              {Array.isArray(categories) && categories.map((category: Category) => (
                 <option key={category.id} value={category.id}>
                   {category.title}
                 </option>
