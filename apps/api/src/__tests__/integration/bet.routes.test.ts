@@ -2,17 +2,20 @@ import request from "supertest";
 import { app } from "../../app";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url:
-        process.env.DATABASE_URL ||
-        "postgresql://postgres:postgres@localhost:5432/sarradabet_test",
-    },
-  },
-});
+const hasDbUrl = !!process.env.DATABASE_URL;
+const prisma = hasDbUrl
+  ? new PrismaClient({
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL,
+        },
+      },
+    })
+  : (null as unknown as PrismaClient);
 
-describe("Bet Routes Integration Tests", () => {
+const suite = hasDbUrl ? describe : describe.skip;
+
+suite("Bet Routes Integration Tests", () => {
   let testCategoryId: number;
   let testBetId: number;
 
