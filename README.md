@@ -5,6 +5,7 @@
 [![Deploy](https://github.com/LMafra/sarradabet/actions/workflows/deploy.yml/badge.svg)](https://github.com/LMafra/sarradabet/actions/workflows/deploy.yml)
 [![Dependency Update](https://github.com/LMafra/sarradabet/actions/workflows/dependency-update.yml/badge.svg)](https://github.com/LMafra/sarradabet/actions/workflows/dependency-update.yml)
 [![PR](https://github.com/LMafra/sarradabet/actions/workflows/pr.yml/badge.svg)](https://github.com/LMafra/sarradabet/actions/workflows/pr.yml)
+[![Coverage](https://github.com/LMafra/sarradabet/actions/workflows/coverage-badge.yml/badge.svg)](https://github.com/LMafra/sarradabet/actions/workflows/coverage-badge.yml)
 
 A modern, full-stack betting platform built with clean architecture principles, featuring real-time odds, voting systems, and comprehensive validation.
 
@@ -245,6 +246,12 @@ Error responses follow this format:
 ```
 
 ## 🧪 Testing
+
+### Coverage Status
+
+![API Coverage](https://github.com/LMafra/sarradabet/blob/main/badges/api-coverage.svg)
+![Web Coverage](https://github.com/LMafra/sarradabet/blob/main/badges/web-coverage.svg)
+![Combined Coverage](https://github.com/LMafra/sarradabet/blob/main/badges/combined-coverage.svg)
 
 ### Backend Tests
 
