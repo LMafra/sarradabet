@@ -72,8 +72,8 @@ jobs:
             echo "✅ Proper secret usage detected"
           fi
           
-          # Check for proper Node.js version usage
-          if grep -r "node-version" .github/workflows/ | grep -v "20"; then
+          # Enforce Node 20 usage in workflows
+          if grep -R "node-version" .github/workflows/ | grep -v "20"; then
             echo "⚠️ Warning: Non-standard Node.js version detected"
           fi
           

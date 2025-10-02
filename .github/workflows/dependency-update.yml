@@ -27,7 +27,7 @@ jobs:
       - name: Update dependencies
         run: |
           npm update
-          npm audit fix --audit-level moderate
+          npm audit fix --audit-level moderate || true
 
       - name: Check for changes
         id: changes

@@ -41,30 +41,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
 
-      # Add your deployment steps here
-      # Examples for different platforms:
-      
-      # For Railway:
-      # - name: Deploy to Railway
-      #   uses: railway-app/railway-deploy@v1
-      #   with:
-      #     railway-token: ${{ secrets.RAILWAY_TOKEN }}
-      #     service: api
-      
-      # For Vercel:
-      # - name: Deploy to Vercel
-      #   uses: amondnet/vercel-action@v25
-      #   with:
-      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
-      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-      #     working-directory: apps/api
-      
-      # For Docker:
-      # - name: Build Docker image
-      #   run: docker build -t sarradabet-api ./apps/api
-      # - name: Push to registry
-      #   run: docker push your-registry/sarradabet-api
+      # TODO: Add deployment step(s) for your platform
 
   # Deploy Web
   deploy-web:
@@ -87,36 +64,4 @@ jobs:
         run: npm run build
         working-directory: apps/web
 
-      # Add your deployment steps here
-      # Examples for different platforms:
-      
-      # For Vercel:
-      # - name: Deploy to Vercel
-      #   uses: amondnet/vercel-action@v25
-      #   with:
-      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
-      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-      #     working-directory: apps/web
-      
-      # For Netlify:
-      # - name: Deploy to Netlify
-      #   uses: nwtgck/actions-netlify@v3.0
-      #   with:
-      #     publish-dir: './apps/web/dist'
-      #     production-branch: main
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     deploy-message: "Deploy from GitHub Actions"
-      #   env:
-      #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      
-      # For AWS S3:
-      # - name: Deploy to S3
-      #   uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-east-1
-      # - name: Upload to S3
-      #   run: aws s3 sync ./apps/web/dist s3://your-bucket-name --delete
+      # TODO: Add deployment step(s) for your platform

@@ -98,32 +98,11 @@ jobs:
         run: npm run build
         working-directory: apps/${{ matrix.app }}
 
-      - name: Create archive
-        run: |
-          cd apps/${{ matrix.app }}
-          tar -czf ${{ matrix.app }}-${{ github.ref_name || inputs.version }}.tar.gz dist/
-          cd ../..
-          tar -czf ${{ matrix.app }}-source-${{ github.ref_name || inputs.version }}.tar.gz apps/${{ matrix.app }}/src/ apps/${{ matrix.app }}/package.json apps/${{ matrix.app }}/tsconfig.json
-
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./${{ matrix.app }}-${{ github.ref_name || inputs.version }}.tar.gz
-          asset_name: ${{ matrix.app }}-${{ github.ref_name || inputs.version }}.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload Source Assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./${{ matrix.app }}-source-${{ github.ref_name || inputs.version }}.tar.gz
-          asset_name: ${{ matrix.app }}-source-${{ github.ref_name || inputs.version }}.tar.gz
-          asset_content_type: application/gzip
+          name: ${{ matrix.app }}-dist-${{ github.ref_name || inputs.version }}
+          path: apps/${{ matrix.app }}/dist
 
   notify:
     needs: [create-release, build-and-upload]
