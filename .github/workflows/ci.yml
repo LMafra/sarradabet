@@ -13,78 +13,10 @@ permissions:
 
 env:
   NODE_VERSION: '20'
-  PNPM_VERSION: '8'
 
 jobs:
-  # Job to check if we should run CI based on changed files
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      api: ${{ steps.changes.outputs.api }}
-      web: ${{ steps.changes.outputs.web }}
-      packages: ${{ steps.changes.outputs.packages }}
-      root: ${{ steps.changes.outputs.root }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Check for changes
-        uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            api:
-              - 'apps/api/**'
-              - 'packages/**'
-              - 'package.json'
-              - 'turbo.json'
-            web:
-              - 'apps/web/**'
-              - 'packages/**'
-              - 'package.json'
-              - 'turbo.json'
-            packages:
-              - 'packages/**'
-              - 'package.json'
-              - 'turbo.json'
-            root:
-              - 'package.json'
-              - 'turbo.json'
-              - '.github/**'
-
-  # Install dependencies and cache them
-  install:
-    runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.root == 'true'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Cache Turbo
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}-
-
-  # Lint and type check
   lint-and-types:
     runs-on: ubuntu-latest
-    needs: [changes, install]
-    if: needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.root == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -104,11 +36,8 @@ jobs:
       - name: Type check
         run: npm run check-types
 
-  # Build applications
   build:
     runs-on: ubuntu-latest
-    needs: [changes, install]
-    if: needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.root == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -122,19 +51,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate Prisma client
-        if: needs.changes.outputs.api == 'true'
+      - name: Generate Prisma client (API)
         run: npm run prisma:generate
         working-directory: apps/api
 
       - name: Build applications
         run: npm run build
 
-  # Test API
-  test-api:
+  test:
     runs-on: ubuntu-latest
-    needs: [changes, install]
-    if: needs.changes.outputs.api == 'true'
     services:
       postgres:
         image: postgres:15
@@ -149,7 +74,6 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -163,12 +87,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate Prisma client
-        run: npm run prisma:generate
-        working-directory: apps/api
-
-      - name: Setup test database
+      - name: Prepare API database
         run: |
+          npm run prisma:generate
           npm run prisma:migrate:deploy
           npm run db:seed:simple
         working-directory: apps/api
@@ -183,48 +104,11 @@ jobs:
           DIRECT_URL: postgresql://postgres:postgres@localhost:5432/sarradabet_test
           NODE_ENV: test
 
-      - name: Upload API coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./apps/api/coverage/lcov.info
-          flags: api
-          name: api-coverage
-        continue-on-error: true
-
-  # Test Web
-  test-web:
-    runs-on: ubuntu-latest
-    needs: [changes, install]
-    if: needs.changes.outputs.web == 'true'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run web tests
+      - name: Run Web tests
         run: npm run test:web:coverage
 
-      - name: Upload web coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./apps/web/coverage/lcov.info
-          flags: web
-          name: web-coverage
-        continue-on-error: true
-
-  # Security audit
   security-audit:
     runs-on: ubuntu-latest
-    needs: [changes, install]
-    if: needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' || needs.changes.outputs.packages == 'true' || needs.changes.outputs.root == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -241,20 +125,3 @@ jobs:
       - name: Run security audit
         run: npm audit --audit-level moderate
         continue-on-error: true
-
-  # Summary job that depends on all other jobs
-  ci-success:
-    runs-on: ubuntu-latest
-    needs: [lint-and-types, build, test-api, test-web, security-audit]
-    if: always()
-    steps:
-      - name: Check all jobs
-        run: |
-          if [[ "${{ needs.lint-and-types.result }}" == "failure" || 
-                "${{ needs.build.result }}" == "failure" || 
-                "${{ needs.test-api.result }}" == "failure" || 
-                "${{ needs.test-web.result }}" == "failure" ]]; then
-            echo "One or more CI jobs failed"
-            exit 1
-          fi
-          echo "All CI jobs passed successfully"
