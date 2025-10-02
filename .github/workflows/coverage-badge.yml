@@ -193,7 +193,15 @@ jobs:
           if [ -d "badges" ] && [ "$(ls -A badges)" ]; then
             git add badges/
             git commit -m "Update coverage badges [skip ci]" || exit 0
-            git push
+            
+            # Handle detached HEAD state for pull requests
+            if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+              # For PRs, we can't push directly, so we'll just create the badges locally
+              echo "Badges created successfully for PR. They will be available after merge."
+            else
+              # For pushes to main/develop, we can push normally
+              git push
+            fi
           fi
 
       - name: Upload coverage reports
@@ -203,4 +211,11 @@ jobs:
           path: |
             apps/api/coverage/
             apps/web/coverage/
+          retention-days: 30
+
+      - name: Upload coverage badges
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-badges
+          path: badges/
           retention-days: 30
