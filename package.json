@@ -43,6 +43,6 @@
   "overrides": {
     "on-headers": ">=1.1.0",
     "@eslint/plugin-kit": ">=0.3.4",
-    "brace-expansion": ">=2.0.2"
+    "minimatch": "^3.1.2"
   }
 }

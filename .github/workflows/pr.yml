@@ -10,7 +10,7 @@ permissions:
   issues: write
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
 
 jobs:
   # Check if PR is ready for review

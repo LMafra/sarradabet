@@ -73,7 +73,7 @@ jobs:
           fi
           
           # Check for proper Node.js version usage
-          if grep -r "node-version" .github/workflows/ | grep -v "18"; then
+          if grep -r "node-version" .github/workflows/ | grep -v "20"; then
             echo "⚠️ Warning: Non-standard Node.js version detected"
           fi
           
