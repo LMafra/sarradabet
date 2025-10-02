@@ -41,7 +41,7 @@ export const getAllBetsFromRepository = async (
 };
 
 export const createBetWithOdds = async (data: CreateBetDTO) => {
-  return prisma.$transaction(async (tx) => {
+  return prisma.$transaction(async (tx: any) => {
     return tx.bet.create({
       data: {
         title: data.title,

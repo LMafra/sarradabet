@@ -49,7 +49,7 @@ export class BetRepository extends BaseRepository<
       },
     });
 
-    return bets.map((b) =>
+    return bets.map((b: any) =>
       this.transformBetWithVotes(
         b as unknown as BetEntity & {
           odds: Array<OddsEntity & { _count: { votes: number } }>;
