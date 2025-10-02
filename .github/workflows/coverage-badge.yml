@@ -85,28 +85,38 @@ jobs:
 
       - name: Generate Web coverage badge
         run: |
-          # Extract coverage percentage from coverage-final.json
+          # Extract coverage percentage from V8 coverage format
           if [ -f "apps/web/coverage/coverage-final.json" ]; then
             WEB_PERCENTAGE=$(node -e "
               const fs = require('fs');
-              const coverage = JSON.parse(fs.readFileSync('apps/web/coverage/coverage-final.json', 'utf8'));
-              let totalLines = 0;
-              let coveredLines = 0;
-              
-              Object.values(coverage).forEach(file => {
-                if (file.s) {
-                  Object.values(file.s).forEach(line => {
-                    totalLines++;
-                    if (line > 0) coveredLines++;
-                  });
-                }
-              });
-              
-              const percentage = totalLines > 0 ? Math.round((coveredLines / totalLines) * 100) : 0;
-              console.log(percentage);
+              try {
+                const coverage = JSON.parse(fs.readFileSync('apps/web/coverage/coverage-final.json', 'utf8'));
+                let totalLines = 0;
+                let coveredLines = 0;
+                
+                Object.values(coverage).forEach(file => {
+                  if (file.s) {
+                    // V8 format uses 's' for statement coverage
+                    Object.values(file.s).forEach(line => {
+                      totalLines++;
+                      if (line > 0) coveredLines++;
+                    });
+                  }
+                });
+                
+                const percentage = totalLines > 0 ? Math.round((coveredLines / totalLines) * 100) : 0;
+                console.log(percentage);
+              } catch (error) {
+                console.log(0);
+              }
             ")
           else
-            WEB_PERCENTAGE=0
+            # Try to extract from HTML report as fallback
+            if [ -f "apps/web/coverage/index.html" ]; then
+              WEB_PERCENTAGE=$(grep -o 'Statements.*[0-9]*%' apps/web/coverage/index.html | grep -o '[0-9]*%' | head -1 | sed 's/%//' || echo "0")
+            else
+              WEB_PERCENTAGE=0
+            fi
           fi
           
           echo "WEB_COVERAGE_PERCENTAGE=$WEB_PERCENTAGE" >> $GITHUB_ENV
