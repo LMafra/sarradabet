@@ -45,7 +45,7 @@ const HomePage: React.FC = () => {
   }, [refetchCategories]);
 
   const groupedBets = useMemo(() => {
-    if (!bets.length || !categories.length) {
+    if (!Array.isArray(bets) || !Array.isArray(categories) || !bets.length || !categories.length) {
       return [];
     }
 
@@ -313,7 +313,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 <span>Todas</span>
               </span>
             </button>
-            {categories.map((category) => (
+            {Array.isArray(categories) && categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => onSelectCategory(category.id)}
