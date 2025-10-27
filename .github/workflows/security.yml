@@ -40,7 +40,7 @@ jobs:
           npm audit --audit-level moderate
 
       - name: Upload audit results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: npm-audit-results
           path: audit-results.json
@@ -99,7 +99,7 @@ jobs:
           npx license-checker --json > license-report.json || true
 
       - name: Upload license report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: license-report
           path: license-report.json
