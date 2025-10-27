@@ -99,7 +99,7 @@ jobs:
         working-directory: apps/${{ matrix.app }}
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.app }}-dist-${{ github.ref_name || inputs.version }}
           path: apps/${{ matrix.app }}/dist
